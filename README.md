@@ -12,8 +12,11 @@ Python libraries:
 
 Tutorials:
 1. Understanding the DEAP dataset (Done)
-2. Analyzing power frequencies, and asymmetry
-3. Machine learning models
+2. EEG feature engineering
+   - spectrum
+   - asymmetry
+   - connectivity
+4. Machine learning models
    - SVM, LR
 5. Deep learning models
    - LSTM
