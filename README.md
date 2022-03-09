@@ -16,8 +16,9 @@ Tutorials:
    - spectrum
    - asymmetry
    - connectivity
+   - common spatial pattern
 4. Machine learning models
-   - SVM, LR
+   - SVM
 5. Deep learning models
    - LSTM
    - CNN1D
@@ -25,4 +26,9 @@ Tutorials:
    - CNN1D + LSTM
    - EEGNet
    - Attention Variants
+     - Self-Attention
+     - Multi-Head Attention
+     - Hierarchical Attention
+     - Hard Attention
+     - Soft Attention
    
