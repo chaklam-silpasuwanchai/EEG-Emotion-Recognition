@@ -22,10 +22,10 @@ Tutorials:
    - connectivity + SVM
    - common spatial pattern + SVM
 3. Deep learning models
-   - LSTM (51.56% accuracy)
-   - CNN1D + LSTM (57.81% accuracy)
-   - CNN1D + LSTM + General Attention (56.25% accuracy)
-   - CNN1D + LSTM + Self Attention (46.88% accuracy)
+   - LSTM (71% accuracy)
+   - CNN1D + LSTM (89% accuracy)
+   - CNN1D + LSTM + General Attention (92% accuracy)
+   - CNN1D + LSTM + Self Attention (85% accuracy)
    - Spectogram + CNN2D
    - EEGNet
    
