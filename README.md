@@ -20,9 +20,10 @@ Tutorials:
 4. Machine learning models
    - SVM
 5. Deep learning models
-   - LSTM
-   - CNN1D + LSTM
-   - CNN1D + LSTM + Attention
+   - LSTM (51.56% accuracy)
+   - CNN1D + LSTM (57.81% accuracy)
+   - CNN1D + LSTM + General Attention (56.25% accuracy)
+   - CNN1D + LSTM + Self Attention (46.88% accuracy)
    - Spectogram + CNN2D
    - EEGNet
    
