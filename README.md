@@ -21,13 +21,8 @@ Tutorials:
    - SVM
 5. Deep learning models
    - LSTM
-   - Spectogram + CNN2D
    - CNN1D + LSTM
+   - CNN1D + LSTM + Attention
+   - Spectogram + CNN2D
    - EEGNet
-   - Attention Variants
-     - Self-Attention
-     - Multi-Head Attention
-     - Hierarchical Attention
-     - Hard Attention
-     - Soft Attention
    
