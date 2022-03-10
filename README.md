@@ -21,7 +21,6 @@ Tutorials:
    - SVM
 5. Deep learning models
    - LSTM
-   - CNN1D
    - Spectogram + CNN2D
    - CNN1D + LSTM
    - EEGNet
