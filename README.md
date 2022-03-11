@@ -26,6 +26,7 @@ Tutorials:
    - CNN1D + LSTM (89% accuracy)
    - CNN1D + LSTM + General Attention (92% accuracy)
    - CNN1D + LSTM + Self Attention (85% accuracy)
+   - CNN1D + LSTM + MultiHead Attention (87% accuracy)
    - Spectogram + CNN2D
    - EEGNet
    
