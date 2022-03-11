@@ -24,8 +24,8 @@ Tutorials:
 3. Deep learning models
    - LSTM (71% accuracy)
    - CNN1D + LSTM (89% accuracy)
-   - CNN1D + LSTM + General Attention (92% accuracy)
-   - CNN1D + LSTM + Self Attention (85% accuracy)
+   - CNN1D + LSTM + General Attention (91% accuracy)
+   - CNN1D + LSTM + Self Attention (86% accuracy)
    - CNN1D + LSTM + MultiHead Attention (87% accuracy)
    - Spectogram + CNN2D
    - EEGNet
