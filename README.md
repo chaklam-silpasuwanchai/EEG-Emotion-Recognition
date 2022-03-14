@@ -13,6 +13,7 @@ Python libraries:
 2. PyTorch
 3. NumPy
 4. Sckit-Learn
+5. SciPy
 
 Tutorials:
 1. Understanding the DEAP dataset (Done)
