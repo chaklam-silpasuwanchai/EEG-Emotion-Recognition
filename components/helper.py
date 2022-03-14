@@ -21,7 +21,7 @@ def getLoaders(dataset, batch_size):
     print(f"Test Dataset size:  {len(test_set)}\n")
 
     # let's create the loader so we can easily loop each batch for training
-    params = {"batch_size":16,"shuffle": True,"pin_memory": True}
+    params = {"batch_size":batch_size,"shuffle": True,"pin_memory": True}
 
     train_loader = DataLoader(train_set, **params)
     val_loader   = DataLoader(val_set, **params)
