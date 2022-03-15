@@ -29,8 +29,8 @@ Tutorials:
    - (07.) LSTM (50 epochs - 71% accuracy)
    - (08.) CNN1D + LSTM (50 epochs - 92% accuracy)
    - (09.) Spectogram + CNN2D 
-     - CNN 2 layers - (50 epochs - 86% accuracy)
-     - CNN 4 layers - (50 epochs - % accuracy)
+     - CNN 2 layers - (50 epochs - 87% accuracy)
+     - CNN 4 layers - (50 epochs - 96% accuracy)
 4. Advanced
    - (10.) CNN1D + LSTM + General Attention 
      - Dot Product Attention (50 epochs - 94% accuracy)
