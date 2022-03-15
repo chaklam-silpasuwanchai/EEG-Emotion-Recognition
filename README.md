@@ -41,7 +41,7 @@ Tutorials:
      - Using mean to combine (90% acc)
      - Using sum to combine (91% acc)
      - Using last state to combine (90% acc)
-   - (12.) CNN1D + LSTM + MultiHead Attention 
+   - (12.) CNN1D + LSTM + MultiHead Self Attention 
      - Using mean to combine (92% acc)
      - Using sum to combine (92% acc)
      - Using last state to combine (94% acc)
