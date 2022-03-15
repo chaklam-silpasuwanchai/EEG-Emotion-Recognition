@@ -25,27 +25,27 @@ Tutorials:
    - (04.) connectivity + SVM - Akraradet
    - (05.) common spatial pattern + SVM - Akraradet
    - (06.) phase coherence + SVM - Akraradet
-3. Baseline deep learning models
-   - (07.) LSTM (50 epochs - 71% accuracy)
-   - (08.) CNN1D + LSTM (50 epochs - 92% accuracy)
+3. Baseline deep learning models (50 epochs)
+   - (07.) LSTM (71% acc)
+   - (08.) CNN1D + LSTM (92% acc)
    - (09.) Spectogram + CNN2D 
-     - CNN 2 layers - (50 epochs - 87% accuracy)
-     - CNN 4 layers - (50 epochs - 96% accuracy)
-4. Advanced
+     - CNN 2 layers - (87% acc)
+     - CNN 4 layers - (96% acc)
+4. Advanced (50 epochs)
    - (10.) CNN1D + LSTM + General Attention 
-     - Dot Product Attention (50 epochs - 94% accuracy)
-     - Multiplicative Attention (50 epochs - ) Fabby
-     - Additive Attention (50 epochs - ) Babby
-     - Hierarchical Attention (50 epochs - ) Fabby
+     - Dot Product Attention (94% acc)
+     - Multiplicative Attention (  ) Fabby
+     - Additive Attention (  ) Babby
+     - Hierarchical Attention (  ) Fabby
    - (11.) CNN1D + LSTM + Self Attention
-     - Using mean to combine (50 epochs - 90% accuracy)
-     - Using sum to combine (50 epochs - 91% accuracy)
-     - Using last state to combine (50 epochs - 90% accuracy)
+     - Using mean to combine (90% accuracy)
+     - Using sum to combine (91% accuracy)
+     - Using last state to combine (90% accuracy)
    - (12.) CNN1D + LSTM + MultiHead Attention 
-     - Using mean to combine (50 epochs - 92% accuracy)
-     - Using sum to combine (50 epochs - 92% accuracy)
-     - Using last state to combine (50 epochs - 94% accuracy)
-   - (13.) ChannelNet (50 epochs - ) Beau
-   - (14.) EEGNet (50 epochs - ) Chaky
-   - (15.) Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
+     - Using mean to combine (92% accuracy)
+     - Using sum to combine (92% accuracy)
+     - Using last state to combine (94% accuracy)
+   - (13.) ChannelNet ( ) Beau
+   - (14.) EEGNet ( ) Chaky
+   - (15.) Spatial–Temporal Self-Attention CNN ( ) New + Babby + Beau
    
