@@ -2,15 +2,13 @@
 
 *Authors: myself and my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
 
-This tutorial covers most traditional machine learning algorithms and deep learning algorithms for predicting EEG signals.  
+This tutorial covers basic EEG analyis, traditional machine learning algorithms and deep learning algorithms for predicting EEG signals, by using emotion recognition from the benchmark DEAP dataset as the case study.
 
 My intention is that this can be used by my Master and Ph.D. students as the getting started kit for their EEG research.   These algorithms may not necessary work well particularly for EEG emotion recognition, but I have included all of them for the sake of completeness.
 
 ---
 
 Note: Before using the tutorials, please create a folder "data" and download preprocessed DEAP dataset and put s01.dat,...,s32.dat inside this "data" folder.  The data folder will be in the same directory as the tutorial.
-
-This tutorial explains basic EEG analysis as well as common deep learning models, by using emotion recognition from the benchmark DEAP dataset as the case study.
 
 Python libraries:
 1. Python MNE
