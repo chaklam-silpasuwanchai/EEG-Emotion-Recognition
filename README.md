@@ -18,7 +18,7 @@ Python libraries:
 5. SciPy
 
 Tutorials:
-1. (01.) Understanding the DEAP dataset (Done)
+1. (01.) Understanding the DEAP dataset
 2. Common EEG feature engineering + machine learning
    - (02.) spectrum + SVM (61%)
    - (03.) asymmetry + SVM - Akraradet
