@@ -30,7 +30,7 @@ Tutorials:
    - CNN1D + LSTM (89% accuracy)
    - CNN1D + LSTM + General Attention (91% accuracy)
    - CNN1D + LSTM + Self Attention (86% accuracy)
-     - Using mean to combine (50 epochs - % accuracy)
+     - Using mean to combine (50 epochs - 90% accuracy)
      - Using sum to combine (50 epochs - accuracy)
      - Using last state to combine (50 epochs - accuracy)
    - CNN1D + LSTM + MultiHead Attention 
