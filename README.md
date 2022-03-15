@@ -1,4 +1,4 @@
-# EEG-Emotion-Recognition
+# EEG Emotion Recognition (DEAP dataset)
 
 *Authors: myself and my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
 
