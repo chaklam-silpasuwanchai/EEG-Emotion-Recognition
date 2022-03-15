@@ -24,7 +24,7 @@ Tutorials:
    - asymmetry + SVM - Akraradet
    - connectivity + SVM - Akraradet
    - common spatial pattern + SVM - Akraradet
-   - phase coherence
+   - phase coherence + SVM - Akraradet
 3. Deep learning models
    - LSTM (50 epochs - 71% accuracy)
    - CNN1D + LSTM (50 epochs - 89% accuracy)
