@@ -28,7 +28,15 @@ Tutorials:
 3. Baseline deep learning models
    - LSTM (50 epochs - 71% accuracy)
    - CNN1D + LSTM (50 epochs - 92% accuracy)
-   - CNN1D + LSTM + General Attention (50 epochs - 94% accuracy)
+   - Spectogram + CNN2D (50 epochs - 85% accuracy)
+     - CNN 2 layers -
+     - CNN 4 layers - 
+4. Advanced
+   - CNN1D + LSTM + General Attention 
+     - Dot Product Attention (50 epochs - 94% accuracy)
+     - Multiplicative Attention (50 epochs - ) Fabby
+     - Additive Attention (50 epochs - ) Babby
+     - Hierarchical Attention (50 epochs - ) Fabby
    - CNN1D + LSTM + Self Attention
      - Using mean to combine (50 epochs - 90% accuracy)
      - Using sum to combine (50 epochs - 91% accuracy)
@@ -37,12 +45,7 @@ Tutorials:
      - Using mean to combine (50 epochs - 92% accuracy)
      - Using sum to combine (50 epochs - 92% accuracy)
      - Using last state to combine (50 epochs - 94% accuracy)
-   - Spectogram + CNN2D (50 epochs - 85% accuracy)
-4. Advanced
-   - CNN1D + LSTM + Hierarchical Attention (50 epochs - ) Fabby
-   - CNN1D + LSTM + Multiplicative Attention (50 epochs - ) Babby
-   - CNN1D + LSTM + Additive Attention (50 epochs - ) Babby
    - ChannelNet (50 epochs - ) Beau
-   - EEGNet (50 epochs - )
+   - EEGNet (50 epochs - ) Chaky
    - Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
    
