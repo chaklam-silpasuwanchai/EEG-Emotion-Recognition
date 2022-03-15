@@ -27,7 +27,7 @@ Tutorials:
    - phase coherence + SVM - Akraradet
 3. Baseline deep learning models
    - LSTM (50 epochs - 71% accuracy)
-   - CNN1D + LSTM (50 epochs - 89% accuracy)
+   - CNN1D + LSTM (50 epochs - 92% accuracy)
    - CNN1D + LSTM + General Attention (50 epochs - 94% accuracy)
    - CNN1D + LSTM + Self Attention
      - Using mean to combine (50 epochs - 90% accuracy)
