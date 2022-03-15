@@ -43,6 +43,6 @@ Tutorials:
    - CNN1D + LSTM + Multiplicative Attention (50 epochs - ) Babby
    - CNN1D + LSTM + Additive Attention (50 epochs - ) Babby
    - ChannelNet (50 epochs - ) Beau
-   - EEGNet (50 epochs - ) Chaky
+   - EEGNet (50 epochs - )
    - Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
    
