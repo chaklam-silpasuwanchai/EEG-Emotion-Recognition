@@ -58,7 +58,8 @@ class Dataset(torch.utils.data.Dataset):
     
     
 class SpecDataset(torch.utils.data.Dataset):
-    def __init__(self, path, stim, sample_rate, window_size, step_size):
+    
+    def __init__(self, path, stim, sample_rate, window_size, step_size, segments):
         _, _, filenames = next(os.walk(path))
         filenames = sorted(filenames)
         all_data = []
@@ -76,9 +77,7 @@ class SpecDataset(torch.utils.data.Dataset):
         
         shape = self.data.shape
         
-        #perform segmentation=====
-        segments = 12
-        
+        #perform segmentation=====          
         self.data = self.data.reshape(shape[0], shape[1], int(shape[2]/segments), segments)
         #data shape: (1280, 32, 672, 12)
 
@@ -87,6 +86,7 @@ class SpecDataset(torch.utils.data.Dataset):
 
         self.data = self.data.reshape(shape[0] * segments, shape[1], -1)
         #data shape: (1280*12, 32, 672)
+        
         #==========================
         
         #perform spectrogram========
