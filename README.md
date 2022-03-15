@@ -21,9 +21,9 @@ Tutorials:
 1. Understanding the DEAP dataset (Done)
 2. EEG feature engineering + machine learning
    - spectrum + SVM (61%)
-   - asymmetry + SVM
-   - connectivity + SVM
-   - common spatial pattern + SVM
+   - asymmetry + SVM - Akraradet
+   - connectivity + SVM - Akraradet
+   - common spatial pattern + SVM - Akraradet
    - phase coherence
 3. Deep learning models
    - LSTM (71% accuracy)
@@ -32,5 +32,11 @@ Tutorials:
    - CNN1D + LSTM + Self Attention (86% accuracy)
    - CNN1D + LSTM + MultiHead Attention (50 epochs - 93% accuracy)
    - Spectogram + CNN2D (50 epochs - 85%)
-   - EEGNet
+4. Advanced
+   - CNN1D + LSTM + Hierarchical Attention (50 epochs - ) Fabby
+   - CNN1D + LSTM + Multiplicative Attention (50 epochs - ) Babby
+   - CNN1D + LSTM + Additive Attention (50 epochs - ) Babby
+   - ChannelNet (50 epochs - ) Beau
+   - EEGNet (50 epochs - ) Chaky
+   - Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
    
