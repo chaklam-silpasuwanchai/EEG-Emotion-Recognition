@@ -26,10 +26,10 @@ Tutorials:
    - common spatial pattern + SVM - Akraradet
    - phase coherence
 3. Deep learning models
-   - LSTM (71% accuracy)
-   - CNN1D + LSTM (89% accuracy)
-   - CNN1D + LSTM + General Attention (91% accuracy)
-   - CNN1D + LSTM + Self Attention (86% accuracy)
+   - LSTM (50 epochs - 71% accuracy)
+   - CNN1D + LSTM (50 epochs - 89% accuracy)
+   - CNN1D + LSTM + General Attention (50 epochs - 91% accuracy)
+   - CNN1D + LSTM + Self Attention
      - Using mean to combine (50 epochs - 90% accuracy)
      - Using sum to combine (50 epochs - accuracy)
      - Using last state to combine (50 epochs - accuracy)
