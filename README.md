@@ -20,7 +20,7 @@ Python libraries:
 Tutorials:
 1. Understanding the DEAP dataset (Done)
 2. EEG feature engineering + machine learning
-   - spectrum + SVM
+   - spectrum + SVM (61%)
    - asymmetry + SVM
    - connectivity + SVM
    - common spatial pattern + SVM
@@ -30,6 +30,6 @@ Tutorials:
    - CNN1D + LSTM + General Attention (91% accuracy)
    - CNN1D + LSTM + Self Attention (86% accuracy)
    - CNN1D + LSTM + MultiHead Attention (87% accuracy)
-   - Spectogram + CNN2D
+   - Spectogram + CNN2D (72%)
    - EEGNet
    
