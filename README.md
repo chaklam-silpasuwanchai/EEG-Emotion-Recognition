@@ -24,6 +24,7 @@ Tutorials:
    - asymmetry + SVM
    - connectivity + SVM
    - common spatial pattern + SVM
+   - phase coherence
 3. Deep learning models
    - LSTM (71% accuracy)
    - CNN1D + LSTM (89% accuracy)
