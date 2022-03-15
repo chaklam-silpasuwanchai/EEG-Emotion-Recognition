@@ -1,8 +1,8 @@
 # EEG-Emotion-Recognition
 
-This tutorial covers most traditional machine learning algorithms and deep learning algorithms for predicting EEG signals.  
+*Authors: myself and my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
 
-*These tutorials are contributed by my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
+This tutorial covers most traditional machine learning algorithms and deep learning algorithms for predicting EEG signals.  
 
 My intention is that this can be used by my Master and Ph.D. students as the getting started kit for their EEG research.   These algorithms may not necessary work well particularly for EEG emotion recognition, but I have include all of them for the sake of completeness.
 
