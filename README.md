@@ -38,13 +38,13 @@ Tutorials:
      - Additive Attention (  ) Babby
      - Hierarchical Attention (  ) Fabby
    - (11.) CNN1D + LSTM + Self Attention
-     - Using mean to combine (90% accuracy)
-     - Using sum to combine (91% accuracy)
-     - Using last state to combine (90% accuracy)
+     - Using mean to combine (90% acc)
+     - Using sum to combine (91% acc)
+     - Using last state to combine (90% acc)
    - (12.) CNN1D + LSTM + MultiHead Attention 
-     - Using mean to combine (92% accuracy)
-     - Using sum to combine (92% accuracy)
-     - Using last state to combine (94% accuracy)
+     - Using mean to combine (92% acc)
+     - Using sum to combine (92% acc)
+     - Using last state to combine (94% acc)
    - (13.) ChannelNet ( ) Beau
    - (14.) EEGNet ( ) Chaky
    - (15.) Spatial–Temporal Self-Attention CNN ( ) New + Babby + Beau
