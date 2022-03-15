@@ -8,7 +8,7 @@ My intention is that this can be used by my Master and Ph.D. students as the get
 
 ---
 
-Note: Before using the tutorials, please create a folder "data" and download preprocessed DEAP dataset and put s01.dat,...,s32.dat inside this "data" folder.  The data folder will be in the same directory as the tutorial.
+Note: Before using the tutorials, please create a folder "data" and download preprocessed DEAP dataset and put s01.dat,...,s32.dat inside this "data" folder.  The data folder will be in the same directory as the tutorial.   Also create an empty "models" folder as well.
 
 Python libraries:
 1. Python MNE
