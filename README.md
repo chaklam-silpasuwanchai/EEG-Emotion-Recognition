@@ -2,6 +2,8 @@
 
 This tutorial covers most traditional machine learning algorithms and deep learning algorithms for predicting EEG signals.  
 
+Part 2-5 is contributed by my Ph.D. student Mr. Akraradet and the deep learning part is written by myself.
+
 My intention is that this can be used by my Master and Ph.D. students as the getting started kit for their EEG research.   These algorithms may not necessary work well particularly for EEG emotion recognition, but I have include all of them for the sake of completeness.
 
 Note: Before using the tutorials, please create a folder "data" and download preprocessed DEAP dataset and put s01.dat,...,s32.dat inside this "data" folder.  The data folder will be in the same directory as the tutorial.
