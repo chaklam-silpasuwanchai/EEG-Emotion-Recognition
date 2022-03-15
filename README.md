@@ -19,13 +19,13 @@ Python libraries:
 
 Tutorials:
 1. Understanding the DEAP dataset (Done)
-2. EEG feature engineering + machine learning
+2. Common EEG feature engineering + machine learning
    - spectrum + SVM (61%)
    - asymmetry + SVM - Akraradet
    - connectivity + SVM - Akraradet
    - common spatial pattern + SVM - Akraradet
    - phase coherence + SVM - Akraradet
-3. Deep learning models
+3. Baseline deep learning models
    - LSTM (50 epochs - 71% accuracy)
    - CNN1D + LSTM (50 epochs - 89% accuracy)
    - CNN1D + LSTM + General Attention (50 epochs - 91% accuracy)
