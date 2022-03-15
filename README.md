@@ -18,34 +18,34 @@ Python libraries:
 5. SciPy
 
 Tutorials:
-1. Understanding the DEAP dataset (Done)
+1. (01.) Understanding the DEAP dataset (Done)
 2. Common EEG feature engineering + machine learning
-   - spectrum + SVM (61%)
-   - asymmetry + SVM - Akraradet
-   - connectivity + SVM - Akraradet
-   - common spatial pattern + SVM - Akraradet
-   - phase coherence + SVM - Akraradet
+   - (02.) spectrum + SVM (61%)
+   - (03.) asymmetry + SVM - Akraradet
+   - (04.) connectivity + SVM - Akraradet
+   - (05.) common spatial pattern + SVM - Akraradet
+   - (06.) phase coherence + SVM - Akraradet
 3. Baseline deep learning models
-   - LSTM (50 epochs - 71% accuracy)
-   - CNN1D + LSTM (50 epochs - 92% accuracy)
-   - Spectogram + CNN2D (50 epochs - 85% accuracy)
+   - (07.) LSTM (50 epochs - 71% accuracy)
+   - (08.) CNN1D + LSTM (50 epochs - 92% accuracy)
+   - (09.) Spectogram + CNN2D (50 epochs - 85% accuracy)
      - CNN 2 layers -
      - CNN 4 layers - 
 4. Advanced
-   - CNN1D + LSTM + General Attention 
+   - (10.) CNN1D + LSTM + General Attention 
      - Dot Product Attention (50 epochs - 94% accuracy)
      - Multiplicative Attention (50 epochs - ) Fabby
      - Additive Attention (50 epochs - ) Babby
      - Hierarchical Attention (50 epochs - ) Fabby
-   - CNN1D + LSTM + Self Attention
+   - (11.) CNN1D + LSTM + Self Attention
      - Using mean to combine (50 epochs - 90% accuracy)
      - Using sum to combine (50 epochs - 91% accuracy)
      - Using last state to combine (50 epochs - 90% accuracy)
-   - CNN1D + LSTM + MultiHead Attention 
+   - (12.) CNN1D + LSTM + MultiHead Attention 
      - Using mean to combine (50 epochs - 92% accuracy)
      - Using sum to combine (50 epochs - 92% accuracy)
      - Using last state to combine (50 epochs - 94% accuracy)
-   - ChannelNet (50 epochs - ) Beau
-   - EEGNet (50 epochs - ) Chaky
-   - Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
+   - (13.) ChannelNet (50 epochs - ) Beau
+   - (14.) EEGNet (50 epochs - ) Chaky
+   - (15.) Spatial–Temporal Self-Attention CNN (50 epochs - ) New + Babby + Beau
    
