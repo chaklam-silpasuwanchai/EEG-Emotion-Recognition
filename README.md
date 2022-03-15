@@ -54,7 +54,7 @@ Tutorials:
 Some possible conclusions:
 - It is quite obvious that applying CNN1D before LSTM creates drastic improvement, implying the usefulness of CNN1D in smoothening and convoluting the signals into more meaningful representations for LSTM
 - It is also quite clear that using spectrograms can well capture both temporal and frequency information, thus the higher accuracy as shown in CNN2D four layers
-- It is quite clear that adding attention on top of CNN1D + LSTM brings slight benefit, adding around 2% extra accuracy.  But this benefit may not be guaranteed, as seen in single head self-attention.
-- Multihead self attention is beneneficial compared to only single head
-- It is worth trying different reduction method (sum, mean, last) but the results may not be straightforward
+- It is quite clear that adding attention on top of CNN1D + LSTM brings slight benefit, adding around 2% extra accuracy.  But this benefit is not certain, as seen in single head self-attention.  This suggests that adding attention should be carefully designed.  In addition, the added accuracy needs to be justified with great amount of increase in parameters.
+- Multihead self attention is clearly better compared to only single head attention
+- It is worth trying different reduction method (sum, mean, last) but the results may not be straightforward.  This is likely the one of the less prioritized hyperparameters to try.
    
