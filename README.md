@@ -32,12 +32,12 @@ Tutorials:
    - CNN1D + LSTM + Self Attention
      - Using mean to combine (50 epochs - 90% accuracy)
      - Using sum to combine (50 epochs - 91% accuracy)
-     - Using last state to combine (50 epochs - accuracy)
+     - Using last state to combine (50 epochs - 90% accuracy)
    - CNN1D + LSTM + MultiHead Attention 
      - Using mean to combine (50 epochs - 92% accuracy)
      - Using sum to combine (50 epochs - 92% accuracy)
      - Using last state to combine (50 epochs - 94% accuracy)
-   - Spectogram + CNN2D (50 epochs - 85%)
+   - Spectogram + CNN2D (50 epochs - 85% accuracy)
 4. Advanced
    - CNN1D + LSTM + Hierarchical Attention (50 epochs - ) Fabby
    - CNN1D + LSTM + Multiplicative Attention (50 epochs - ) Babby
