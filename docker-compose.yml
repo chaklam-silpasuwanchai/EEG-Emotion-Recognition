@@ -19,7 +19,9 @@ services:
     deploy:
       resources:
         limits:
+          # number of cores this container can use (can be 0.5 means half core)
           cpus: '8'
+          # maximun RAM this container can use
           memory: '12G'
         reservations:
           devices:
