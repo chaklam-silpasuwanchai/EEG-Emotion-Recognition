@@ -4,29 +4,12 @@ from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 
 def getLoaders(dataset, batch_size):
-
-#     # randomly shuffle the indexes, then randomly select 80% of the data
-#     indices   = torch.randperm(len(dataset)).tolist()
-#     train_ind = int(0.7 * len(dataset))
-#     val_ind   = int(0.9 * len(dataset))
-
-#     # create subset of dataset
-#     train_set = torch.utils.data.Subset(dataset, indices[:train_ind])
-#     val_set   = torch.utils.data.Subset(dataset, indices[train_ind:val_ind])
-#     test_set  = torch.utils.data.Subset(dataset, indices[val_ind:])
-
-#     print(f"Full Dataset size:  {len(dataset)}")
-#     print(f"Train Dataset size: {len(train_set)}")
-#     print(f"Valid Dataset size: {len(val_set)}")
-#     print(f"Test Dataset size:  {len(test_set)}\n")
-
+    print(f"Dataset size:  {len(dataset)}")
     # let's create the loader so we can easily loop each batch for training
     params = {"batch_size":batch_size,"shuffle": True,"pin_memory": True}
     loader = DataLoader(dataset, **params)
-#     train_loader = DataLoader(train_set, **params)
-#     val_loader   = DataLoader(val_set, **params)
-#     test_loader  = DataLoader(test_set, **params)
     
+    print(f"Loader size:  {len(loader)}")    
     return loader
 
 def binary_accuracy(preds, y):
