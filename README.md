@@ -6,7 +6,7 @@ This repository compares different modeling approaches ranging from traditional 
 
 My intention is that there are just so many researches out there about the DEAP dataset but they can be hardly compared.  Consequently, as a EEG researcher, it is almost impossible to know what architectural decisions should I make.  This is due to the fact that some paper either did not provide the codebase hence not reproducible, or did not clearly specify the hyperparameters used, or just simply due to the obvious fact that even two papers using the same model cannot be directly compared because of differences in hardware and hyperparameters used.  
 
-Thus I want to make a controlled comparision of typical EEG models to create a clear understand what works or what does not.
+Thus I want to make a controlled comparision of typical EEG models to create a clear understanding what works or what does not.
 
 My another intention is that this codebase can be used by my Master and Ph.D. students as the getting started kit for their EEG research, since it mostly covers most of the typical EEG models.
 
