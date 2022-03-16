@@ -2,9 +2,13 @@
 
 *Authors: myself and my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
 
-This tutorial covers basic EEG analyis, traditional machine learning algorithms and deep learning algorithms for predicting EEG signals, by using emotion recognition from the benchmark DEAP dataset as the case study.
+This repository compares different modeling approaches ranging from traditional machine learning algorithms and deep learning algorithms, by using emotion recognition from the benchmark DEAP dataset as the case study.
 
-My intention is that this can be used by my Master and Ph.D. students as the getting started kit for their EEG research.   These algorithms may not necessary work well particularly for EEG emotion recognition, but I have included all of them for the sake of completeness.
+My intention is that there are just so many researches out there about the DEAP dataset but they can be hardly compared.  Consequently, as a EEG researcher, it is almost impossible to know what architectural decisions should I make.  This is due to the fact that some paper either did not provide the codebase hence not reproducible, or did not clearly specify the hyperparameters used, or just simply due to the obvious fact that even two papers using the same model cannot be directly compared because of differences in hardware and hyperparameters used.  
+
+Thus I want to make a controlled comparision of typical EEG models to create a clear understand what works or what does not.
+
+My another intention is that this codebase can be used by my Master and Ph.D. students as the getting started kit for their EEG research, since it mostly covers most of the typical EEG models.
 
 ---
 
