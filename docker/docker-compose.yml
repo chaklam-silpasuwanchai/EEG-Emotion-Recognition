@@ -10,7 +10,7 @@ services:
       dockerfile: Dockerfile
     # Map volume once container is started
     volumes:
-      - ./:/root/projects
+      - ../:/root/projects
     # Environment Variable
     environment:
       # `pipenv` will create an environment in the working directory
