@@ -9,7 +9,7 @@ torch.manual_seed(1)
 
 class Dataset(torch.utils.data.Dataset):
     
-    def __init__(self, path, stim, split):
+    def __init__(self, path, stim, split=None):
         _, _, filenames = next(os.walk(path))
         filenames = sorted(filenames)
         all_data = []
@@ -23,10 +23,11 @@ class Dataset(torch.utils.data.Dataset):
             elif stim == "Arousal":
                 all_label.append(temp['labels'][:,1:2]) # Arousal  #the second index is arousal
                 
-        data = np.vstack(all_data)[:, :32, ]   #shape: (1280, 32, 8064) --> take only the first 32 channels
-        label = np.vstack(all_label) #(1280, 1)  ==> 1280 samples, 
+        self.data = np.vstack(all_data)[:, :32, ]   #shape: (1280, 32, 8064) --> take only the first 32 channels
+        self.label = np.vstack(all_label) #(1280, 1)  ==> 1280 samples, 
         
-        self.data, self.label = self._split(data, label, split)
+        if(split != None):
+            self.data, self.label = self._split(data, label, split)
         
         shape = self.data.shape
         
