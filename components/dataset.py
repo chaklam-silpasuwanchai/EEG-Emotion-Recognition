@@ -5,11 +5,16 @@ import numpy as np
 from scipy import signal
 
 # setting seed so that splitting process and training process can be reproduced
-torch.manual_seed(1)
 
 class Dataset(torch.utils.data.Dataset):
+    '''
+    subject-independent dataset
+    '''
     
     def __init__(self, path, stim, split):
+        
+        torch.manual_seed(1)
+        
         _, _, filenames = next(os.walk(path))
         filenames = sorted(filenames)
         all_data = []
@@ -69,13 +74,14 @@ class Dataset(torch.utils.data.Dataset):
 
         # create idx
         if split == "train":
-            idx = indices[:train_ind]
+            idx = indices[:train_ind] 
         
         elif split == "val":
-            idx = indices[train_ind:val_ind]
+            idx = indices[train_ind:val_ind] 
         
         elif split == "test":
             idx = indices[val_ind:]
+
         else:
             raise ValueError("train/val/test")
         
@@ -83,7 +89,8 @@ class Dataset(torch.utils.data.Dataset):
         label = label[idx]
         
         return data, label
-    
+
+# subject-dependent
     
 class SpecDataset(torch.utils.data.Dataset):
     
