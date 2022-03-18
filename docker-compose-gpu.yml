@@ -7,14 +7,13 @@ services:
     # Docker file
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: _gpu.Dockerfile
     # Map volume once container is started
     volumes:
-      - ../:/root/projects
-    # Environment Variable
-    environment:
-      # `pipenv` will create an environment in the working directory
-      - PIPENV_VENV_IN_PROJECT="enabled"
+      - ./projects:/root/projects
+      - /root/projects/.venv
+
+  
     # Mapping GPU
     deploy:
       resources:
