@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  # Service/container name
+  cuda-python:
+    # Optional image name
+    image: eeg-emotion
+    # Docker file
+    build: 
+      context: .
+      dockerfile: _gpu.Dockerfile
+    # Map volume once container is started
+    volumes:
+      - ./projects:/root/projects
+      - /root/projects/.venv
+
+  
+    # Mapping GPU
+    deploy:
+      resources:
+        limits:
+          # number of cores this container can use (can be 0.5 means half core)
+          cpus: '8'
+          # maximun RAM this container can use
+          memory: '12G'
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

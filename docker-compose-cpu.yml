@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  # Service/container name
+  python:
+    # Optional image name
+    image: eeg-emotion-cpu
+    # Docker file
+    build: 
+      context: .
+      dockerfile: _cpu.Dockerfile
+    # Map volume once container is started
+    volumes:
+      - ./projects:/root/projects
+      - /root/projects/.venv

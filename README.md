@@ -21,6 +21,34 @@ Python libraries:
 4. Sckit-Learn
 5. SciPy
 
+---
+
+## Docker Prerequisite (Akraradet & Raknatee)
+
+1. Docker
+2. Docker-Compose
+
+## How to use
+
+The docker is designed to use with Visual Studio Code with Docker Extension. This way we can attach `visual code` to the docker environment.
+
+Once you `compose` the service, go to the docker tab and find `eeg-emotion`. Right click and select `Attach Visual Studio Code`. Open the `/root/projects/` and have fun coding.
+
+There are 2 types of docker-compose. CPU only and GPU
+
+- CPU
+```sh
+docker-compose -f docker-compose-cpu.yml up --build -d
+```
+
+- GPU
+```sh
+docker-compose -f docker-compose-gpu.yml up --build -d
+```
+
+
+---
+
 Tutorials:
 1. (01.) Understanding the DEAP dataset
 2. Common EEG feature engineering + machine learning
