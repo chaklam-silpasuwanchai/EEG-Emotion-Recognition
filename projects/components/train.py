@@ -15,8 +15,8 @@ def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, mod
 
         start_time = time.time()
 
-        train_loss, train_acc = _train(model, train_loader, optimizer, criterion, device, seq_len_first=False)
-        valid_loss, valid_acc = evaluate(model, val_loader, criterion, device, seq_len_first=False)
+        train_loss, train_acc = _train(model, train_loader, optimizer, criterion, device, seq_len_first)
+        valid_loss, valid_acc = evaluate(model, val_loader, criterion, device, seq_len_first)
 
         #for plotting
         train_losses.append(train_loss)
@@ -47,16 +47,18 @@ def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=Fal
     
         if(seq_len_first):
             # data shape: (batch, seq len, channel)
-            data  = batch['data'].to(device).permute(0, 2, 1)    
+            data  = batch[0].to(device).permute(0, 2, 1)    
         else:
             # data shape: (batch, channel, seq len)
-            data  = batch['data'].to(device)    
+            data  = batch[0].to(device)    
         
         # label shape: (batch, 1)
-        label = batch['label'].to(device) 
+        label = batch[1].to(device) 
         
         #predict
         output = model(data)  #output shape: (batch, 1)
+        
+        
         loss   = criterion(output, label)
         
         #backprop
@@ -86,13 +88,13 @@ def evaluate(model, val_loader, criterion, device, seq_len_first=False):
             
             if(seq_len_first):
                 # data shape: (batch, seq len, channel)
-                data  = batch['data'].to(device).permute(0, 2, 1)    
+                data  = batch[0].to(device).permute(0, 2, 1)    
             else:
                 # data shape: (batch, channel, seq len)
-                data  = batch['data'].to(device)  
+                data  = batch[0].to(device)  
             
             # label shape: (batch, 1)
-            label = batch['label'].to(device) 
+            label = batch[1].to(device) 
         
             #predict and cal loss
             output = model(data)
@@ -124,4 +126,4 @@ def initialize_weights(m):
             if 'bias' in name:
                 nn.init.zeros_(param)
             elif 'weight' in name:
-                nn.init.kaiming_normal_(param) #there are really no evidence what works best for convolution, so I just pick one
+                nn.init.kaiming_normal_(param) #there are really no evidence what works best for convolution, so I just pick one ( He initialization.)
