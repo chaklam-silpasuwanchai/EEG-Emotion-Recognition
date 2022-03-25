@@ -23,18 +23,19 @@ def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, mod
         train_accs  .append(train_acc)
         valid_losses.append(valid_loss)
         valid_accs  .append(valid_acc)
-
-        if valid_loss < best_valid_loss:
-            best_valid_loss = valid_loss
-            torch.save(model.state_dict(), model_name)
-
+        
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
-
-        print(f'Epoch: {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
-        print(f'\t Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
-        print(f'\t Val. Loss: {valid_loss:.3f}  |  Val. Acc: {valid_acc*100:.2f}%')
         
+        if valid_loss < best_valid_loss:
+            best_valid_loss = valid_loss
+            
+            print(f'Best Epoch : {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
+            print(f'\t Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
+            print(f'\t Val. Loss: {valid_loss:.3f}  |  Val. Acc: {valid_acc*100:.2f}%')
+
+        
+
     return train_losses, valid_losses, train_accs, valid_accs
         
 def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=False):

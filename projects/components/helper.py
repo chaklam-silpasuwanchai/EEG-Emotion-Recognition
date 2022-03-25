@@ -58,8 +58,8 @@ def get_par_data(path, par, stim):
     elif stim == "Arousal":
         all_label.append(temp['labels'][:,1:2]) # second index is arousal
 
-    # take only the first 32 channels, and take only the first 7680 (not including the 3s baseline)
-    all_data  = np.vstack(all_data)[:, :32, :7680]   # shape: (1280, 32, 8064)
+    # take only the first 32 channels, and take only the latter 60 s (not including the first 3s baseline)
+    all_data  = np.vstack(all_data)[:, :32, 128*3:]   # shape: (1280, 32, 8064)
     all_label = np.vstack(all_label)            # (1280, 1)  ==> 1280 samples,
     all_label = np.where(all_label >= 5, 1, 0)
     
