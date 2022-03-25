@@ -2,6 +2,7 @@ import torch
 import os, pickle, glob
 import numpy as np
 from sklearn.model_selection import train_test_split
+import mne
 
 class Dataset_subjectDependent(torch.utils.data.Dataset):
     '''
@@ -23,7 +24,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         # ['data/s01.dat',
         # 'data/s02.dat',
         # 'data/s03.dat', ...
-        files = glob.glob('data/*')
+        files = glob.glob(f'{dataset_path}/*')
         print(f"Found: {len(files)} files")
         #### Init attribute
         self.files = dict()
@@ -82,6 +83,43 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
             epoch_data, epoch_labels = self._apply_segment(data, labels)
             return epoch_data, epoch_labels
 
+    def get_data_mne_epochs(self,name:str, sfreq:int, split=True ,stimuli:int = STIMULI_ALL) -> tuple: 
+        if(name not in self.files): 
+            raise ValueError(f"The name:{name} are not in {self.files.keys()}")
+        if(type(self.data[name]) == type(None) or type(self.labels[name]) == type(None)):
+            self._load_data(name)
+        data = self.data[name]
+        labels = self.labels[name]
+        # Select Stimuli
+        if(stimuli != self.STIMULI_ALL):
+            labels = labels[:, stimuli].reshape(-1,1)
+        # Convert Stimuli to 0,1
+        labels = self.convert_labels(labels)
+        if(split):
+            data_train, data_test, labels_train, labels_test = train_test_split(data, labels, test_size=0.3, shuffle=True, random_state=42)
+            # Segmenting
+            epoch_data_train, epoch_labels_train = self._apply_segment(data_train, labels_train)
+            epoch_data_test, epoch_labels_test = self._apply_segment(data_test, labels_test)
+
+            epoch_data_test = self._convert_data_to_mne_epochs(epoch_data_test, sfreq)
+            epoch_data_train = self._convert_data_to_mne_epochs(epoch_data_train, sfreq)
+
+            return epoch_data_train, epoch_data_test, epoch_labels_train, epoch_labels_test
+        else:
+            epoch_data, epoch_labels = self._apply_segment(data, labels)
+            epoch_data = self._convert_data_to_mne_epochs(epoch_data, sfreq)
+            return epoch_data, epoch_labels
+
+
+    def _convert_data_to_mne_epochs(self, data: np.ndarray, sfreq: int):
+        # convert data to mne.Epochs
+        ch_names = ['Fp1','AF3','F3','F7','FC5','FC1','C3','T7','CP5','CP1','P3','P7','PO3','O1','Oz','Pz','Fp2','AF4','Fz','F4','F8','FC6','FC2','Cz','C4','T8','CP6','CP2','P4','P8','PO4','O2']
+        ch_types = ['eeg'] * len(ch_names)
+        # https://mne.tools/stable/generated/mne.create_info.html
+        info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=sfreq)
+        epochs = mne.EpochsArray(data,info)
+        epochs.set_montage('standard_1020')
+        return epochs
 
     def get_data_torch_dataset(self,name:str, stimuli:int = STIMULI_ALL) -> tuple:
         if(name not in self.files): 
