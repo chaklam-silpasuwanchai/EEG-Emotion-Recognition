@@ -1,7 +1,7 @@
 import torch
 import os, pickle, glob
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedGroupKFold
 import mne
 
 class Dataset_subjectDependent(torch.utils.data.Dataset):
@@ -61,9 +61,13 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         # (40, 2)
         self.labels[name] = dat['labels'][:,:2]
 
-    def get_data_numpy(self,name:str, split=True ,stimuli:int = STIMULI_ALL) -> tuple: 
+    def get_data(self,name:str, stimuli:int = STIMULI_ALL, sfreq=None ,return_type='numpy') -> tuple: 
         if(name not in self.files): 
             raise ValueError(f"The name:{name} are not in {self.files.keys()}")
+        if(return_type not in ['numpy', 'mne']):
+            raise ValueError(f"Parameter `return_type` must be in ['numpy', 'mne']. You put '{return_type}'")
+        if(return_type == 'mne' and sfreq==None):
+            raise ValueError(f"When `return_type` is 'mne', `sfreq` must be set")
         if(type(self.data[name]) == type(None) or type(self.labels[name]) == type(None)):
             self._load_data(name)
         data = self.data[name]
@@ -73,43 +77,10 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
             labels = labels[:, stimuli].reshape(-1,1)
         # Convert Stimuli to 0,1
         labels = self.convert_labels(labels)
-        if(split):
-            data_train, data_test, labels_train, labels_test = train_test_split(data, labels, test_size=0.3, shuffle=True, random_state=42)
-            # Segmenting
-            epoch_data_train, epoch_labels_train = self._apply_segment(data_train, labels_train)
-            epoch_data_test, epoch_labels_test = self._apply_segment(data_test, labels_test)
-            return epoch_data_train, epoch_data_test, epoch_labels_train, epoch_labels_test
-        else:
-            epoch_data, epoch_labels = self._apply_segment(data, labels)
-            return epoch_data, epoch_labels
-
-    def get_data_mne_epochs(self,name:str, sfreq:int, split=True ,stimuli:int = STIMULI_ALL) -> tuple: 
-        if(name not in self.files): 
-            raise ValueError(f"The name:{name} are not in {self.files.keys()}")
-        if(type(self.data[name]) == type(None) or type(self.labels[name]) == type(None)):
-            self._load_data(name)
-        data = self.data[name]
-        labels = self.labels[name]
-        # Select Stimuli
-        if(stimuli != self.STIMULI_ALL):
-            labels = labels[:, stimuli].reshape(-1,1)
-        # Convert Stimuli to 0,1
-        labels = self.convert_labels(labels)
-        if(split):
-            data_train, data_test, labels_train, labels_test = train_test_split(data, labels, test_size=0.3, shuffle=True, random_state=42)
-            # Segmenting
-            epoch_data_train, epoch_labels_train = self._apply_segment(data_train, labels_train)
-            epoch_data_test, epoch_labels_test = self._apply_segment(data_test, labels_test)
-
-            epoch_data_test = self._convert_data_to_mne_epochs(epoch_data_test, sfreq)
-            epoch_data_train = self._convert_data_to_mne_epochs(epoch_data_train, sfreq)
-
-            return epoch_data_train, epoch_data_test, epoch_labels_train, epoch_labels_test
-        else:
-            epoch_data, epoch_labels = self._apply_segment(data, labels)
+        epoch_data, epoch_labels, groups = self._apply_segment(data, labels, return_groups=True)
+        if(return_type == 'mne'):
             epoch_data = self._convert_data_to_mne_epochs(epoch_data, sfreq)
-            return epoch_data, epoch_labels
-
+        return epoch_data, epoch_labels, groups
 
     def _convert_data_to_mne_epochs(self, data: np.ndarray, sfreq: int):
         # convert data to mne.Epochs
@@ -121,7 +92,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         epochs.set_montage('standard_1020')
         return epochs
 
-    def get_data_torch_dataset(self,name:str, stimuli:int = STIMULI_ALL) -> tuple:
+    def get_data_torch_dataset(self,name:str, stimuli:int = STIMULI_ALL, train_size=0.75) -> tuple:
         if(name not in self.files): 
             raise ValueError(f"The name:{name} are not in {self.files.keys()}")
         if(type(self.data[name]) == type(None) or type(self.labels[name]) == type(None)):
@@ -134,7 +105,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         # Convert Stimuli to 0,1
         labels = self.convert_labels(labels)
         
-        data_train, data_test, labels_train, labels_test = train_test_split(data, labels, test_size=0.3, shuffle=True, random_state=42)
+        data_train, data_test, labels_train, labels_test = train_test_split(data, labels, train_size=train_size, shuffle=True, random_state=42)
         # Segmenting
         epoch_data_train, epoch_labels_train = self._apply_segment(data_train, labels_train)
         epoch_data_test, epoch_labels_test = self._apply_segment(data_test, labels_test)
@@ -143,30 +114,32 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         return train_dataset, test_dataset
 
 
-    def convert_labels(self, labels):
-        mean = labels.mean(axis=0)
+    def convert_labels(self, labels, threshold: int=5):
         # print(mean.shape)
-        labels[labels < mean] = 0
-        labels[labels >= mean] = 1
+        labels = (labels > threshold).astype(float)
         # print((labels > mean).shape)
         return labels
 
     def set_segment(self, segment_number: int):
         self.segment = segment_number
 
-    def _apply_segment(self, data, labels):
+    def _apply_segment(self, data, labels, return_groups = False):
         if(data.shape[-1] % self.segment != 0):
             raise ValueError(f"The segment={self.segment} causes the unequal window size.\n\t data.shape={data.shape}")
 
-        epoch_data, epoch_labels = [], []
+        epoch_data, epoch_labels, groups = [], [], []
         step = data.shape[-1]//self.segment
         for index in np.arange(0,data.shape[-1], step):
             epoch_data.append( data[:,:,index:index+step]  )
             epoch_labels.append( labels )
+            groups.append(list(range(data.shape[0])))
         epoch_data = np.vstack(epoch_data)
         epoch_labels = np.vstack(epoch_labels)
-
-        return epoch_data, epoch_labels
+        groups = np.hstack(groups)
+        if(return_groups):
+            return epoch_data, epoch_labels, groups
+        else: 
+            return epoch_data, epoch_labels
 
 
 class Dataset(torch.utils.data.Dataset):
