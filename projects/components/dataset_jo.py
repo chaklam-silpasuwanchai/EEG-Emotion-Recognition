@@ -88,7 +88,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         ch_types = ['eeg'] * len(ch_names)
         # https://mne.tools/stable/generated/mne.create_info.html
         info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=sfreq)
-        epochs = mne.EpochsArray(data,info)
+        epochs = mne.EpochsArray(data,info, verbose='CRITICAL')
         epochs.set_montage('standard_1020')
         return epochs
 
