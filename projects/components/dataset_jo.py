@@ -12,7 +12,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
     STIMULI_VALENCE = 0
     STIMULI_AROUSAL = 1
 
-    def __init__(self, dataset_path: str, lazyload: bool=True):
+    def __init__(self, dataset_path: str, segment:int = 1, lazyload: bool=True):
         """ 
             dataset_path: str
                 The path to the dataset
@@ -30,7 +30,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         self.files = dict()
         self.data = dict()
         self.labels = dict()
-        self.segment = 1
+        self.segment = segment
 
         # Set attribute
         for f in files:

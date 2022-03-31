@@ -3,13 +3,14 @@ import torch.nn as nn
 import time
 from components.helper import epoch_time, binary_accuracy
 
-def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, model_name, device, seq_len_first=False):
+def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, device, seq_len_first=False):
     best_valid_loss = float('inf')
 
     train_losses = []
     train_accs   = []
     valid_losses = []
     valid_accs   = []
+    epoch_times   = []
 
     for epoch in range(num_epochs):
 
@@ -17,26 +18,23 @@ def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, mod
 
         train_loss, train_acc = _train(model, train_loader, optimizer, criterion, device, seq_len_first)
         valid_loss, valid_acc = evaluate(model, val_loader, criterion, device, seq_len_first)
-
-        #for plotting
+        
+        # for plotting
         train_losses.append(train_loss)
-        train_accs  .append(train_acc)
+        train_accs.append(train_acc)
         valid_losses.append(valid_loss)
-        valid_accs  .append(valid_acc)
+        valid_accs.append(valid_acc)
         
         end_time = time.time()
         epoch_mins, epoch_secs = epoch_time(start_time, end_time)
+        epoch_times.append((epoch_mins, epoch_secs))
         
         if valid_loss < best_valid_loss:
-            best_valid_loss = valid_loss
-            
-            print(f'Best Epoch : {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
-            print(f'\t Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}%')
-            print(f'\t Val. Loss: {valid_loss:.3f}  |  Val. Acc: {valid_acc*100:.2f}%')
-
         
-
-    return train_losses, valid_losses, train_accs, valid_accs
+            best_valid_loss = valid_loss
+            print(f'Best Epoch : {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
+            print(f'\t Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}% Val. Loss: {valid_loss:.3f}  |  Val. Acc: {valid_acc*100:.2f}%')
+    return train_losses, valid_losses, train_accs, valid_accs, epoch_times
         
 def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=False):
 
@@ -111,20 +109,3 @@ def evaluate(model, val_loader, criterion, device, seq_len_first=False):
     
     return epoch_val_loss, epoch_val_acc
 
-#explicitly initialize weights for better learning
-def initialize_weights(m):
-    if isinstance(m, nn.Linear):   #if layer is of Linear
-        nn.init.xavier_normal_(m.weight)
-        nn.init.zeros_(m.bias)
-    elif isinstance(m, nn.LSTM):   #if layer is of LSTM
-        for name, param in m.named_parameters():
-            if 'bias' in name:
-                nn.init.zeros_(param)
-            elif 'weight' in name:
-                nn.init.orthogonal_(param)  #orthogonal is a common way to initialize weights for RNN/LSTM/GRU
-    elif isinstance(m, (nn.Conv1d, nn.Conv2d)):
-        for name, param in m.named_parameters():
-            if 'bias' in name:
-                nn.init.zeros_(param)
-            elif 'weight' in name:
-                nn.init.kaiming_normal_(param) #there are really no evidence what works best for convolution, so I just pick one ( He initialization.)

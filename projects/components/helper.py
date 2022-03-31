@@ -1,17 +1,38 @@
 import torch, os, pickle
 import time
-from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
 import numpy as np
+import torch.nn as nn
 
-def getLoaders(dataset, batch_size):
-    print(f"Dataset size:  {len(dataset)}")
-    # let's create the loader so we can easily loop each batch for training
-    params = {"batch_size":batch_size,"shuffle": True,"pin_memory": True}
-    loader = DataLoader(dataset, **params)
-    
-    print(f"Loader size:  {len(loader)}")    
-    return loader
+
+def get_freer_gpu():
+    os.system('nvidia-smi -q -d Memory |grep -A4 GPU|grep Free >gpu_free')
+    memory_available = [int(x.split()[2]) for x in open('gpu_free', 'r').readlines()]
+    gpu = f'cuda:{np.argmax(memory_available)}'
+    if os.path.exists("gpu_free"):
+        os.remove("gpu_free")
+    else:
+          print("The file does not exist") 
+    return gpu
+
+
+# explicitly initialize weights for better learning
+def initialize_weights(m):
+    if isinstance(m, nn.Linear):   #if layer is of Linear
+        nn.init.xavier_normal_(m.weight)
+        nn.init.zeros_(m.bias)
+    elif isinstance(m, nn.LSTM):   #if layer is of LSTM
+        for name, param in m.named_parameters():
+            if 'bias' in name:
+                nn.init.zeros_(param)
+            elif 'weight' in name:
+                nn.init.orthogonal_(param)  #orthogonal is a common way to initialize weights for RNN/LSTM/GRU
+    elif isinstance(m, (nn.Conv1d, nn.Conv2d)):
+        for name, param in m.named_parameters():
+            if 'bias' in name:
+                nn.init.zeros_(param)
+            elif 'weight' in name:
+                nn.init.kaiming_normal_(param) #there are really no evidence what works best for convolution, so I just pick one ( He initialization.)
 
 def binary_accuracy(preds, y):
     """
@@ -19,8 +40,8 @@ def binary_accuracy(preds, y):
     """
     #round predictions to the closest integer
     rounded_preds = torch.round(torch.sigmoid(preds))
-    correct = (rounded_preds == y).float() #convert into float for division 
-    acc = correct.sum() / len(correct)
+    correct       = (rounded_preds == y).float() #convert into float for division 
+    acc           = correct.sum() / len(correct)
     return acc
 
 def epoch_time(start_time, end_time):
@@ -41,42 +62,24 @@ def plot_performance(train, val, name):
     ax.set_xlabel('updates')
     ax.set_ylabel(name)
     
-def get_par_data(path, par, stim):
     
-    _, _, filenames = next(os.walk(path))
-    filenames = sorted(filenames)
-    par_filename = filenames[par]
-    print("Par : ", par_filename)
+    
+import csv, os 
+def save_result_csv( row_dic , _path ):
+    filename    = _path
+    mode        = 'a' if os.path.exists(filename) else 'w'
+    with open(f"{filename}", mode) as myfile:
+        fileEmpty   = os.stat(filename).st_size == 0
+        writer      = csv.DictWriter(myfile, delimiter='|', lineterminator='\n',fieldnames= row_dic.keys())      
+        if fileEmpty:
+            writer.writeheader()  # file doesn't exist yet, write a header
 
-    # ==== GET ALL DATA OF THAT PARTICIPANT ====
-    all_data  = []
-    all_label = []
-    temp = pickle.load(open(os.path.join(path, par_filename), 'rb'), encoding='latin1')
-    all_data.append(temp['data'])
-    if stim == "Valence":
-        all_label.append(temp['labels'][:,:1])  # first index is valence
-    elif stim == "Arousal":
-        all_label.append(temp['labels'][:,1:2]) # second index is arousal
-
-    # take only the first 32 channels, and take only the latter 60 s (not including the first 3s baseline)
-    all_data  = np.vstack(all_data)[:, :32, 128*3:]   # shape: (1280, 32, 8064)
-    all_label = np.vstack(all_label)            # (1280, 1)  ==> 1280 samples,
-    all_label = np.where(all_label >= 5, 1, 0)
-    
-    return all_data, all_label
-
-def get_segmented_data(data, label, num_segment):
-    
-    tmp  = data[0, 0, 128:256]
-    tmp2 = data[1, 0, 0:128]
-    
-    data_shape = data.shape
-    data = data.reshape(data_shape[0], data_shape[1], num_segment, int(data_shape[2]/num_segment) )
-    data = data.transpose(0, 2, 1, 3)
-    data = data.reshape(data_shape[0] * num_segment, data_shape[1], -1)
-    label = np.repeat(label, num_segment)[:, np.newaxis]  #the dimension 1 is lost after repeat, so need to unsqueeze (896*12, 1)
-    
-    assert np.array_equal(data[1, 0, :], tmp)
-    assert np.array_equal(data[60, 0, :], tmp2)
-    
-    return data, label
+        writer.writerow( row_dic )
+        print(row_dic)
+        print(f"....save file to {filename} success")
+        myfile.close()
+        
+        
+def print_cls_var( dict_in ):
+    for key, var in vars(dict_in).items():
+        print(f'{key} : {var}')
