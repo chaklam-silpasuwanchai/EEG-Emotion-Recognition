@@ -3,7 +3,7 @@
 
 # # Main 10-Fold Cross-Validation Subject Dependent Split first then Segmentation
 
-# In[ ]:
+# In[31]:
 
 
 import torch
@@ -29,7 +29,7 @@ import argparse
 
 # ## Training Configurations
 
-# In[ ]:
+# In[38]:
 
 
 
@@ -53,6 +53,7 @@ class Config():
         parser  = argparse.ArgumentParser()
         parser.add_argument('-a', '--model_name',    help='model_name' , type=str, required=False)
         parser.add_argument('-x', '--stim',          help='stim' ,       type=int, required=False)
+        parser.add_argument('-s', '--segment',       help='segment' ,    type=int, required=False)
         parser.add_argument('-l', '--len_reduction', help='len_reduction' , type=str, required=False)
         parser.add_argument('-f', '--isdebug',       help='Set running mode' , type=str, required=False)
         args     = parser.parse_args()
@@ -62,11 +63,14 @@ class Config():
             model_name    = 'LSTM'
             stim          = 1
             len_reduction = 'mean'  # 'mean'  or 'sum' or 'last'
+            segment       = 1 # 1, 3, 5
 
         else:
             model_name    = str(args.model_name)
             stim          = int(args.stim)
+            segment       = int(args.segment)
             len_reduction = str(args.len_reduction)  # 'none' or 'mean' or 'sum' or 'last'
+            
 
         
         
@@ -77,7 +81,7 @@ class Config():
         #============================================
         
         
-        self.device = 'cuda:0'
+        self.device = 'cpu'
 
         #========== Training Configurations==========
         self.path = "../data" 
@@ -87,6 +91,7 @@ class Config():
         # STIMULI_AROUSAL = 1       
         self.stim      = stim
         self.stim_name = 'VALENCE' if self.stim else 'AROUSAL'
+        self.segment   = segment
 
         self.params     = {"batch_size" : 16, "shuffle" : True, "pin_memory" : True}
         self.num_epochs = 50
@@ -125,12 +130,13 @@ class Config():
         
         
         #========== save config ==========
-        self.output_path   = 'output/'
+        self.segsplit      = 'split'
+        self.output_path   = f'./output/{self.segsplit}_{int(60/self.segment)}s/'
         self.result_csv    = f'{self.output_path}{self.model_name}_result.csv'
         
 
 
-# In[ ]:
+# In[39]:
 
 
 config = Config()
@@ -139,10 +145,7 @@ print_cls_var( config )
 
 # ## Model Configurations
 
-# In[ ]:
-
-
-
+# In[26]:
 
 
 def init_model( config ):
@@ -203,26 +206,25 @@ def init_model( config ):
     return model, optimizer, criterion
 
 
-# In[ ]:
-
+# In[27]:
 
 
 model, _, _ = init_model( config )
 print(f'The model {type(model).__name__} has {count_parameters(model):,} trainable parameters')# Train the model
 
 
-# In[ ]:
+# In[28]:
 
 
 dataset = Dataset_subjectDependent(config.path)
-dataset.set_segment(60)
+dataset.set_segment(config.segment)
 
 filenames = dataset.get_file_list()
 filenames.sort()
 print(filenames)
 
 
-# In[ ]:
+# In[29]:
 
 
 # def reset_model():
@@ -248,7 +250,7 @@ def make_dataloader(X_orig, y_orig, train_idxs, test_idxs, params):
     return train_loader, val_loader
 
 
-# In[ ]:
+# In[30]:
 
 
 result_dict = {}
@@ -292,7 +294,7 @@ for filename in filenames:
         
         del model, optimizer, criterion, train_loader, val_loader
 
-        ## save to csv at specific epoch
+        # save to csv at specific epoch
         for epoch in range( config.num_epochs ) :
                 result_csv_dic               = {}
                 result_csv_dic['len_reduction']  =  config.len_reduction
@@ -318,4 +320,16 @@ for filename in filenames:
         # with open(f'{config.output_path}{config.model_name}_{config.stim_name}_output_dic', 'wb') as outp:
         #     pickle.dump(result_dict, outp, pickle.HIGHEST_PROTOCOL)
         
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
