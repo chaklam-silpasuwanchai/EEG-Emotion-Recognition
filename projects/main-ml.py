@@ -1,0 +1,66 @@
+from curses import meta
+from time import time
+from components.dataset_jo import Dataset_subjectDependent as MyDataset
+from components.ml import train_model_segment_first
+from components.preprocessing import DE
+import os
+import logging
+import argparse
+
+def get_argument() -> argparse.Namespace:
+    # python filename -h description
+    parser = argparse.ArgumentParser(description="Running EEG Emotion recognition using various preprocessings")
+    parser.add_argument('--segment_lenght','-sl', metavar='SL',type=int,default=60,                    help="The window sizes of segmentation in second.")
+    parser.add_argument('--output_log','-o',      metavar='OL',type=str,default='./output/main-ml.log',help="Path including filename of the output.")
+    parser.add_argument('--stimuli_class','-sc',  metavar='SC',type=str,default='valence',             help="Class of stimuli of classification. It either be 'valence' or 'arousal'.")
+    parser.add_argument('--preprocessing','-p',   metavar='P' ,type=str,default='DE',                  help=f"The type of preprocessing. Possible option are {preprocessing_option}.")
+    parser.add_argument('--subject_setup','-ss',  metavar='SJ',type=str,default='dependent',           help="The configuration when building model. 'dependent' will train model for each subject. 'independent' will train one model for all subjects.")
+    parser.add_argument('--experimental_setup','-es', metavar='EX',type=str,default='trial',           help="The configuration when spliting data. 'trial' will split data such that no single trial exist in both train and test. 'segment' assume each segment is independent, thus segments from one trial can exist in both train and test.")
+    # TODO: write parameters 
+    return parser.parse_args()
+
+
+if __name__ == '__main__':
+    preprocessing_option = ['DE']
+    args = get_argument()
+    # Start logging
+    logging.basicConfig(filename=f'{args.output_log}',
+                    format='%(asctime)s|%(levelname)s|%(message)s', 
+                    datefmt='%d-%m-%Y %H:%M:%S',
+                    level=logging.INFO)
+    logging.info(f'''
+    Starting training:
+        segment_lenght:  {args.segment_lenght}
+        output_log:      {args.output_log}
+        stimuli_class:   {args.stimuli_class}
+        preprocessing:   {args.preprocessing}
+        subject_setup:   {args.subject_setup}
+        experimental_setup: {args.experimental_setup}
+    ''')
+    # Load dataset from path ./data. Inside the path must be s01, s02, s03, ...
+    # Lazyload mean the class will not load data if not use. This will save some RAM. 
+    # But it will eventually load all the data because I did not write garbage collector
+    dataset = MyDataset(dataset_path='data', lazyload=True)
+    dataset.set_segment(7680//(128*args.segment_lenght))
+    assert args.preprocessing in preprocessing_option,          f"The preprocessing '{args.preprocessing}' is not supported."
+    assert args.stimuli_class in ['valence','arousal'],         f"The stimuli_class '{args.stimuli_class}' is not supported."
+    assert args.subject_setup in ['dependent', 'independent'],  f"The subject_setip '{args.subject_setup}' is not supported."
+    assert args.experimental_setup in ['trial', 'segment'],     f"The experimental_setup '{args.experimental_setup}' is not supported."
+    stimuli_class = 0
+    if(args.stimuli_class == 'valence'):
+        stimuli_class = MyDataset.STIMULI_VALENCE
+    elif(args.stimuli_class == 'arousal'):
+        stimuli_class = MyDataset.STIMULI_AROUSAL
+    output_gridsearch_path = f"./output/gridSearch-{args.subject_setup}-{args.experimental_setup}-{args.stimuli_class}-{args.preprocessing}-{args.segment_lenght}"
+    if(os.path.exists(output_gridsearch_path) == False):
+        os.mkdir(output_gridsearch_path)
+
+    for filename in dataset.get_file_list():
+        start = time()
+        data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
+        X = None
+        if(args.preprocessing == 'DE'):
+            X = DE(data)
+        cv_scores = train_model_segment_first(X, labels.reshape(-1), groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
+        logging.info(f"AROUSAL-{filename}|10-CV={format(  round(cv_scores.mean(),5), '.5f')}|STD={format(  round(cv_scores.std(),5), '.5f')}|Time spend={time() - start}")
+

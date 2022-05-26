@@ -121,9 +121,13 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         return labels
 
     def set_segment(self, segment_number: int):
+        """
+            segment_number: from one record, how many smaller record do you want. 
+        """
         self.segment = segment_number
 
-    def _apply_segment(self, data, labels, return_groups = False):
+    def _apply_segment(self, data, labels, return_groups = False): 
+        # data.shape[-1] is time axis.
         if(data.shape[-1] % self.segment != 0):
             raise ValueError(f"The segment={self.segment} causes the unequal window size.\n\t data.shape={data.shape}")
 
