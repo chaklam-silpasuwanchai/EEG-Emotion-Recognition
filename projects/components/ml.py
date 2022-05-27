@@ -52,8 +52,8 @@ def build_model_with_group(X,y,groups) -> GridSearchCV:
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     tuned_parameters = [
-            {"kernel": ["linear"], "C": C_range},
-            {"kernel": ["rbf"],    "C": C_range, "gamma": gamma_range},
+            {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
+            {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
         ]
     grid = GridSearchCV(SVC(), param_grid=tuned_parameters, cv=cv, n_jobs=os.cpu_count(), refit=True, verbose=4, return_train_score=True)
     grid.fit(X=X, y=y, groups=groups)
@@ -104,8 +104,8 @@ def build_model(X,y) -> GridSearchCV:
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     tuned_parameters = [
-            {"kernel": ["linear"], "C": C_range},
-            {"kernel": ["rbf"],    "C": C_range, "gamma": gamma_range},
+            {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
+            {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
         ]
     grid = GridSearchCV(SVC(), param_grid=tuned_parameters, cv=cv, n_jobs=os.cpu_count(), refit=True, verbose=4, return_train_score=True)
     grid.fit(X=X, y=y)

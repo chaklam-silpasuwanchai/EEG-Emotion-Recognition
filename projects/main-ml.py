@@ -2,7 +2,7 @@ from curses import meta
 from time import time
 from components.dataset_jo import Dataset_subjectDependent as MyDataset
 from components.ml import train_model_segment_first, train_model_split_first
-from components.preprocessing import DE
+from components.preprocessing import standardize, DE
 import os
 import logging
 import argparse
@@ -80,6 +80,7 @@ if __name__ == '__main__':
             data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
 
             X = preprocessing(data)
+            X = standardize(X)
             # if experimental_setup is split_first, groups will be ignored
             cv_scores = experimental_setup(X, labels.reshape(-1), groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
 
@@ -106,6 +107,7 @@ if __name__ == '__main__':
 
         start = time()
         X = preprocessing(all_datas)
+        X = standardize(X)
         # if experimental_setup is split_first, groups will be ignored
         cv_scores = experimental_setup(X, all_labels.reshape(-1), all_groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
 
