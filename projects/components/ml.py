@@ -49,8 +49,8 @@ def build_model_with_group(X,y,groups) -> GridSearchCV:
     n_split = 9
     cv = StratifiedGroupKFold(n_splits=n_split, shuffle=True, random_state=42)
     # https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
-    C_range = np.logspace(-2, 10, 13)
-    gamma_range = np.logspace(-9, 3, 13)
+    C_range = np.logspace(-2, 10, 7)
+    gamma_range = np.logspace(-9, 3, 7)
     tuned_parameters = [
             {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
             {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
@@ -101,8 +101,8 @@ def build_model(X,y) -> GridSearchCV:
     n_split = 9
     cv = StratifiedKFold(n_splits=n_split, shuffle=True, random_state=42)
     # https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
-    C_range = np.logspace(-2, 10, 13)
-    gamma_range = np.logspace(-9, 3, 13)
+    C_range = np.logspace(-2, 10, 7)
+    gamma_range = np.logspace(-9, 3, 7)
     tuned_parameters = [
             {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
             {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
