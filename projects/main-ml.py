@@ -2,7 +2,7 @@ from curses import meta
 from time import time
 from components.dataset_jo import Dataset_subjectDependent as MyDataset
 from components.ml import train_model_segment_first, train_model_split_first
-from components.preprocessing import standardize, DE
+from components.preprocessing import standardize, DE, ASYM
 import os
 import logging
 import argparse
@@ -22,7 +22,7 @@ def get_argument() -> argparse.Namespace:
 
 
 if __name__ == '__main__':
-    preprocessing_option = ['DE']
+    preprocessing_option = ['DE','DASM','RASM','DCAU']
     args = get_argument()
     # Start logging
     logging.basicConfig(filename=f'{args.output_log}',
@@ -67,6 +67,10 @@ if __name__ == '__main__':
     preprocessing = None
     if(args.preprocessing == 'DE'):
         preprocessing = DE
+    elif(args.preprocessing in ['DASM','RASM','DCAU']):
+        preprocessing = ASYM
+
+
     experimental_setup = None
     if(args.experimental_setup == 'trial'):
         experimental_setup = train_model_segment_first
@@ -79,7 +83,7 @@ if __name__ == '__main__':
             start = time()
             data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
 
-            X = preprocessing(data)
+            X = preprocessing(data, variant=args.preprocessing)
             X = standardize(X)
             # if experimental_setup is split_first, groups will be ignored
             cv_scores = experimental_setup(X, labels.reshape(-1), groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
@@ -106,7 +110,7 @@ if __name__ == '__main__':
         all_groups = np.vstack(all_groups).reshape(-1)
 
         start = time()
-        X = preprocessing(all_datas)
+        X = preprocessing(data, variant=args.preprocessing)
         X = standardize(X)
         # if experimental_setup is split_first, groups will be ignored
         cv_scores = experimental_setup(X, all_labels.reshape(-1), all_groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")

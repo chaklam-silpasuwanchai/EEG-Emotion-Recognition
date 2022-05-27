@@ -1,5 +1,5 @@
 #!/bin/bash
-rm ./output/*.log
+# rm ./output/*.log
 python3 main-ml.py --subject_setup dependent --experimental_setup trial --stimuli_class valence --preprocessing DE --segment_lenght 60 --output_log ./output/dependent_trial_valence_DE_60.log
 python3 main-ml.py --subject_setup dependent --experimental_setup trial --stimuli_class valence --preprocessing DE --segment_lenght 20 --output_log ./output/dependent_trial_valence_DE_20.log
 python3 main-ml.py --subject_setup dependent --experimental_setup trial --stimuli_class valence --preprocessing DE --segment_lenght 12 --output_log ./output/dependent_trial_valence_DE_12.log
