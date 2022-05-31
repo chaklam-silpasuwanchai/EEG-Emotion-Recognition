@@ -110,7 +110,7 @@ if __name__ == '__main__':
         all_groups = np.vstack(all_groups).reshape(-1)
 
         start = time()
-        X = preprocessing(data, variant=args.preprocessing)
+        X = preprocessing(all_datas, variant=args.preprocessing)
         X = standardize(X)
         # if experimental_setup is split_first, groups will be ignored
         cv_scores = experimental_setup(X, all_labels.reshape(-1), all_groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
