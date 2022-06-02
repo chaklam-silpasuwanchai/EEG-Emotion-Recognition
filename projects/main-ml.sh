@@ -14,7 +14,7 @@ do
                         --stimuli_class $sti \
                         --preprocessing $preprocessing \
                         --segment_lenght $seg\
-                        --output_log ./output/$sub\_$exp\_$sti\_$preprocessing\_$seg.log"
+                        --output_log ./output/$sub-$exp-$sti-$preprocessing-$seg.log"
                 echo $cmd
                 start=$(date +%s)
                 $cmd
