@@ -1,3 +1,4 @@
+from typing import List
 import torch
 import os, pickle, glob
 import numpy as np
@@ -45,8 +46,13 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
             if(lazyload == False):
                 self._load_data(name)
 
-    def get_file_list(self):
-        return list(self.files.keys())
+    def get_file_list(self, configuration:str ='dependent') -> List:
+        L = list()
+        if(configuration == 'dependent'):
+            L = list(self.files.keys())
+        elif(configuration == 'independent'):
+            L = ['all']
+        return L
 
     def get_file_path_list(self):
         return list(self.files.values())
@@ -61,7 +67,28 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         # (40, 2)
         self.labels[name] = dat['labels'][:,:2]
 
+    def get_data_all(self, stimuli):
+        # Get all subj in one big datas, labels, groups
+        all_datas, all_labels, all_groups = [],[],[]
+        for filename in self.get_file_list():
+            data, labels, groups = self.get_data(filename, stimuli=stimuli, return_type='numpy')
+            # subj 1 will have groups start from 100 101 102 ... 139
+            # subj 2 will have groups start from 200 201 202 ... 239
+            # ...
+            # subj 32 will have groups start from 3200 3201 3202 ... 3239
+            groups = int(filename[1:])*100 +  groups
+            # print(filename, int(filename[1:])*100 +  groups)
+            all_datas.append(data)
+            all_labels.append(labels)
+            all_groups.append(groups.reshape(-1,1))
+        all_datas = np.vstack(all_datas)
+        all_labels = np.vstack(all_labels).reshape(-1)
+        all_groups = np.vstack(all_groups).reshape(-1)
+        return all_datas, all_labels, all_groups
+
     def get_data(self,name:str, stimuli:int = STIMULI_ALL, sfreq=None ,return_type='numpy') -> tuple: 
+        if(name == 'all'):
+            return self.get_data_all(stimuli)
         if(name not in self.files): 
             raise ValueError(f"The name:{name} are not in {self.files.keys()}")
         if(return_type not in ['numpy', 'mne']):
@@ -70,6 +97,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
             raise ValueError(f"When `return_type` is 'mne', `sfreq` must be set")
         if(type(self.data[name]) == type(None) or type(self.labels[name]) == type(None)):
             self._load_data(name)
+
         data = self.data[name]
         labels = self.labels[name]
         # Select Stimuli
@@ -80,7 +108,7 @@ class Dataset_subjectDependent(torch.utils.data.Dataset):
         epoch_data, epoch_labels, groups = self._apply_segment(data, labels, return_groups=True)
         if(return_type == 'mne'):
             epoch_data = self._convert_data_to_mne_epochs(epoch_data, sfreq)
-        return epoch_data, epoch_labels, groups
+        return epoch_data, epoch_labels.reshape(-1), groups
 
     def _convert_data_to_mne_epochs(self, data: np.ndarray, sfreq: int):
         # convert data to mne.Epochs

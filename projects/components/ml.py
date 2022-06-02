@@ -5,8 +5,12 @@ from sklearn.svm import SVC
 from IPython.display import display
 import pandas as pd
 import os
+from time import time
 from typing import Tuple
 import logging
+
+def experimental_setup_interface(X:np.ndarray,y,groups,cv_result_prefix="") -> np.ndarray:
+    return X
 
 def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     """
@@ -20,47 +24,29 @@ def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     # If we do "Split-first", then models learn little record of every trial
     # If we doe "Segment-first", then models learn 90% of trials and test on 10%
     # This split-first can be done using "group" argument during split.
-    logging.debug(f"Running Segment-First")
+    logging.info(f"Running Segment-First")
+    logging.info(f"X.shape={X.shape}, y.shape={y.shape}, groups.shape={groups.shape}")
     n_split_outter = 10
     cv_outter = StratifiedGroupKFold(n_splits=n_split_outter, shuffle=False)
     accs = []
     for epoch, (idxs_train, idxs_test) in enumerate(cv_outter.split(X,y,groups)):
+        start = time()
         print(f"BEGIN EPOCH: {epoch+1}/{n_split_outter}")
         X_train, X_test = X[idxs_train], X[idxs_test]
         y_train, y_test = y[idxs_train], y[idxs_test]
         groups_train, groups_test = groups[idxs_train], groups[idxs_test]
         assert set(groups_train).isdisjoint(set(groups_test)),f"Contaminated.\ngroups_train:{groups_train}\ngroups_test:{groups_test}"
 
-        grid = build_model_with_group(X_train,y_train,groups_train)
+        grid = build_model(X_train,y_train,groups_train)
         # Evaluation
         model = grid.best_estimator_
         predict = model.predict(X_test) # type: ignore
         acc = sum(predict == y_test) / len(y_test)
         accs.append(acc)
         # save csv
+        logging.info(f"grid.best_params_={grid.best_params_}, grid.best_score_={grid.best_score_}, grid.best_index_={grid.best_index_}, acc={acc}, time={time()-start}" )
         pd.DataFrame(grid.cv_results_).to_csv(f"{cv_result_prefix}-{epoch+1}.csv")
     return np.array(accs)
-
-def build_model_with_group(X,y,groups) -> GridSearchCV:
-    """
-        This function will only optimized models
-    """
-    logging.debug(f"Running build_model_with_group")
-    n_split = 9
-    cv = StratifiedGroupKFold(n_splits=n_split, shuffle=True, random_state=42)
-    # https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
-    C_range = np.logspace(-2, 10, 7)
-    gamma_range = np.logspace(-9, 3, 7)
-    tuned_parameters = [
-            {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
-            {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
-        ]
-    grid = GridSearchCV(SVC(), param_grid=tuned_parameters, cv=cv, n_jobs=os.cpu_count(), refit=True, verbose=4, return_train_score=True)
-    grid.fit(X=X, y=y, groups=groups)
-    # df = pd.DataFrame(grid.cv_results_)
-    # return grid.best_estimator_, df
-    return grid
-
 
 def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     """
@@ -74,11 +60,13 @@ def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     # If we do "Split-first", then models learn little record of every trial
     # If we doe "Segment-first", then models learn 90% of trials and test on 10%
     # This split-first can be done using "group" argument during split.
-    logging.debug(f"Running Split-First")
+    logging.info(f"Running Split-First")
+    logging.info(f"X.shape={X.shape}, y.shape={y.shape}, groups.shape={groups.shape}")
     n_split_outter = 10
     cv_outter = StratifiedKFold(n_splits=n_split_outter, shuffle=False)
     accs = []
     for epoch, (idxs_train, idxs_test) in enumerate(cv_outter.split(X,y)):
+        start = time()
         print(f"BEGIN EPOCH: {epoch+1}/{n_split_outter}")
         X_train, X_test = X[idxs_train], X[idxs_test]
         y_train, y_test = y[idxs_train], y[idxs_test]
@@ -90,25 +78,31 @@ def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
         acc = sum(predict == y_test) / len(y_test)
         accs.append(acc)
         # save csv
+        logging.info(f"{epoch+1}/{n_split_outter}|grid.best_params_={grid.best_params_}, grid.best_score_={grid.best_score_}, grid.best_index_={grid.best_index_}, acc={acc}, time={time()-start}" )
         pd.DataFrame(grid.cv_results_).to_csv(f"{cv_result_prefix}-{epoch+1}.csv")
     return np.array(accs)
 
-def build_model(X,y) -> GridSearchCV:
+def build_model(X,y,groups=None) -> GridSearchCV:
     """
         This function will only optimized models
     """
-    logging.debug(f"Running build_model")
+    is_groups_none = type(groups) == type(None) # type: ignore
+    logging.info(f"Is groups None: {is_groups_none} ") 
+
     n_split = 9
-    cv = StratifiedKFold(n_splits=n_split, shuffle=True, random_state=42)
+    if(is_groups_none == True):
+        cv = StratifiedKFold(n_splits=n_split, shuffle=True, random_state=42)
+    else:
+        cv = StratifiedGroupKFold(n_splits=n_split, shuffle=True, random_state=42)
     # https://scikit-learn.org/stable/auto_examples/svm/plot_rbf_parameters.html
     C_range = np.logspace(-2, 10, 7)
     gamma_range = np.logspace(-9, 3, 7)
     tuned_parameters = [
-            {"kernel": ["linear"], "C": C_range, "max_iter":[100000], },
-            {"kernel": ["rbf"],    "C": C_range, "max_iter":[100000],  "gamma": gamma_range},
+            {"kernel": ["rbf"],    "C": C_range, "max_iter":[1000],  "gamma": gamma_range},
         ]
     grid = GridSearchCV(SVC(), param_grid=tuned_parameters, cv=cv, n_jobs=os.cpu_count(), refit=True, verbose=4, return_train_score=True)
-    grid.fit(X=X, y=y)
-    # df = pd.DataFrame(grid.cv_results_)
-    # return grid.best_estimator_, df
+    if(is_groups_none == True):
+        grid.fit(X=X, y=y)
+    else:
+        grid.fit(X=X, y=y, groups=groups)
     return grid

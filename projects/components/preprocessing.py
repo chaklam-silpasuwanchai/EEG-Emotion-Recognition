@@ -2,8 +2,7 @@ import numpy as np
 import os
 
 def standardize(data: np.ndarray) -> np.ndarray:
-    '''
-        data: a numpy array of shape (n_samples, n_features)
+    '''data: a numpy array of shape (n_samples, n_features)
     '''
     ori_data = data.copy()
     ori_data = check_float(ori_data)
@@ -21,7 +20,10 @@ def check_float(data) -> np.ndarray:
     if(data.dtype == np.int64): data = data.astype(np.float64)
     return data
 
-def DE(data, variant) -> np.ndarray:
+def preprocess_interface(data: np.ndarray, variant: str) -> np.ndarray:
+    return data
+
+def DE(data: np.ndarray, variant: str) -> np.ndarray:
     from mne_features.feature_extraction import FeatureExtractor
     bands = [(0,4), (4,8), (8,12), (12,30), (30,64)]
     # [alias_feature_function]__[optional_param]

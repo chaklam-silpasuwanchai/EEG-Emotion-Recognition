@@ -1,8 +1,8 @@
 from curses import meta
 from time import time
 from components.dataset_jo import Dataset_subjectDependent as MyDataset
-from components.ml import train_model_segment_first, train_model_split_first
-from components.preprocessing import standardize, DE, ASYM
+from components.ml import experimental_setup_interface, train_model_segment_first, train_model_split_first
+from components.preprocessing import preprocess_interface, standardize, DE, ASYM
 import os
 import logging
 import argparse
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     dataset = MyDataset(dataset_path='data', lazyload=True)
     dataset.set_segment(7680//(128*args.segment_lenght))
 
-    stimuli_class = 0
+    stimuli_class = int()
     if(args.stimuli_class == 'valence'):
         stimuli_class = MyDataset.STIMULI_VALENCE
     elif(args.stimuli_class == 'arousal'):
@@ -64,62 +64,35 @@ if __name__ == '__main__':
         os.mkdir(output_gridsearch_path)
 
     # assign preprocessing
-    preprocessing = None
+    preprocessing = preprocess_interface
     if(args.preprocessing == 'DE'):
         preprocessing = DE
     elif(args.preprocessing in ['DASM','RASM','DCAU']):
         preprocessing = ASYM
 
-
-    experimental_setup = None
+    # assign experimental_setup
+    experimental_setup = experimental_setup_interface
     if(args.experimental_setup == 'trial'):
         experimental_setup = train_model_segment_first
     elif(args.experimental_setup == 'segment'):
         experimental_setup = train_model_split_first
 
     cv_scores_final, cv_scores_std_final = [], []
-    if(args.subject_setup == 'dependent'):
-        for filename in dataset.get_file_list():
-            start = time()
-            data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
-
-            X = preprocessing(data, variant=args.preprocessing)
-            X = standardize(X)
-            # if experimental_setup is split_first, groups will be ignored
-            cv_scores = experimental_setup(X, labels.reshape(-1), groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
-
-            logging.info(f"{filename}|10-CV={format(  round(cv_scores.mean(),5), '.5f')}|STD={format(  round(cv_scores.std(),5), '.5f')}|Time spend={time() - start}")
-            cv_scores_final.append(cv_scores.mean())
-            cv_scores_std_final.append(cv_scores.std())
-    elif(args.subject_setup == 'independent'):
-        # Get all subj in one big datas, labels, groups
-        all_datas, all_labels, all_groups = [],[],[]
-        for filename in dataset.get_file_list():
-            data, labels, groups = dataset.get_data(filename, stimuli=0, return_type='numpy')
-            # subj 1 will have groups start from 100 101 102 ... 139
-            # subj 2 will have groups start from 200 201 202 ... 239
-            # ...
-            # subj 32 will have groups start from 3200 3201 3202 ... 3239
-            groups = int(filename[1:])*100 +  groups
-            # print(filename, int(filename[1:])*100 +  groups)
-            all_datas.append(data)
-            all_labels.append(labels)
-            all_groups.append(groups.reshape(-1,1))
-        all_datas = np.vstack(all_datas)
-        all_labels = np.vstack(all_labels).reshape(-1)
-        all_groups = np.vstack(all_groups).reshape(-1)
-
+    # When pass "dependent": the class will return list of filenames
+    # When pass "independent": the class will return ['all']
+    for filename in dataset.get_file_list(args.subject_setup):
         start = time()
-        X = preprocessing(all_datas, variant=args.preprocessing)
+        data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
+
+        X = preprocessing(data, variant=args.preprocessing)
         X = standardize(X)
         # if experimental_setup is split_first, groups will be ignored
-        cv_scores = experimental_setup(X, all_labels.reshape(-1), all_groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
+        cv_scores = experimental_setup(X, labels, groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
 
-        logging.info(f"ALL|10-CV={format(  round(cv_scores.mean(),5), '.5f')}|STD={format(  round(cv_scores.std(),5), '.5f')}|Time spend={time() - start}")
+        logging.info(f"{filename}|10-CV={format(  round(cv_scores.mean(),5), '.5f')}|STD={format(  round(cv_scores.std(),5), '.5f')}|Time spend={time() - start}")
         cv_scores_final.append(cv_scores.mean())
         cv_scores_std_final.append(cv_scores.std())
-
-
+    
     cv_scores_final = np.array(cv_scores_final)
     cv_scores_std_final = np.array(cv_scores_std_final)
     logging.info(f"final|10-CV={format(  round(cv_scores_final.mean(),5), '.5f')}|STD={format(  round(cv_scores_std_final.std(),5), '.5f')}")
