@@ -1,5 +1,5 @@
 #/bin/bash
-preprocessing="DE"
+preprocessing="DCAU"
 for seg in 60 20 12 1
 do
     for sub in "dependent" "independent"
@@ -8,7 +8,7 @@ do
         do
             for exp in "trial" "segment"
             do
-                cmd="python3 -u main-ml.py \
+                cmd="python3 main-ml.py \
                         --subject_setup $sub \
                         --experimental_setup $exp \
                         --stimuli_class $sti \
