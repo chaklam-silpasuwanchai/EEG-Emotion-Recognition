@@ -2,7 +2,7 @@ from curses import meta
 from time import time
 from components.dataset_jo import Dataset_subjectDependent as MyDataset
 from components.ml import experimental_setup_interface, train_model_segment_first, train_model_split_first
-from components.preprocessing import preprocess_interface, standardize, DE, ASYM
+from components.preprocessing import preprocess_interface, standardize, DE, ASYM, PCC_TIME
 import os
 import logging
 import argparse
@@ -22,7 +22,7 @@ def get_argument() -> argparse.Namespace:
 
 
 if __name__ == '__main__':
-    preprocessing_option = ['DE','DASM','RASM','DCAU']
+    preprocessing_option = ['DE','DASM','RASM','DCAU','PCC_TIME']
     args = get_argument()
     # Start logging
     logging.basicConfig(filename=f'{args.output_log}',
@@ -69,6 +69,8 @@ if __name__ == '__main__':
         preprocessing = DE
     elif(args.preprocessing in ['DASM','RASM','DCAU']):
         preprocessing = ASYM
+    elif(args.preprocessing == 'PCC_TIME'):
+        preprocessing = PCC_TIME
 
     # assign experimental_setup
     experimental_setup = experimental_setup_interface

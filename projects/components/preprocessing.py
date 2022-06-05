@@ -1,4 +1,10 @@
+import mne
+from mne_features.feature_extraction import FeatureExtractor
 import numpy as np
+
+import logging
+from multiprocessing import Pool
+from itertools import combinations
 import os
 
 def standardize(data: np.ndarray) -> np.ndarray:
@@ -20,11 +26,20 @@ def check_float(data) -> np.ndarray:
     if(data.dtype == np.int64): data = data.astype(np.float64)
     return data
 
+def convert_to_mne(data: np.ndarray) -> mne.EpochsArray:
+    ch_names = ['Fp1','AF3','F3','F7','FC5','FC1','C3','T7','CP5','CP1','P3','P7','PO3','O1','Oz','Pz','Fp2','AF4','Fz','F4','F8','FC6','FC2','Cz','C4','T8','CP6','CP2','P4','P8','PO4','O2']
+    ch_types = ['eeg'] * len(ch_names)
+    # https://mne.tools/stable/generated/mne.create_info.html
+    info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=128)
+    epochs = mne.EpochsArray(data,info, verbose='CRITICAL')
+    epochs.set_montage('standard_1020')
+    return epochs
+
 def preprocess_interface(data: np.ndarray, variant: str) -> np.ndarray:
+    raise ValueError(f"This function should not be called")
     return data
 
 def DE(data: np.ndarray, variant: str) -> np.ndarray:
-    from mne_features.feature_extraction import FeatureExtractor
     bands = [(0,4), (4,8), (8,12), (12,30), (30,64)]
     # [alias_feature_function]__[optional_param]
     params = dict({
@@ -65,3 +80,59 @@ def ASYM(data: np.ndarray, variant: str) -> np.ndarray:
         X = PSD_frontal - PSD_posterior
 
     return X
+
+# connectivity
+def pearson_correlation(x,y):
+    """ x,y denoted the signal_x and signal_y following the equation """
+    cov = np.cov(x, y)
+    # print(cov)
+    # [[ 8806859.74527069  8007149.0906219 ] ==> [[cov_xx, cov_xy]
+    # [ 8007149.0906219  10396797.72458848]]      [cov_yx, cov_yy]]
+    cov_xy = cov[0,1] # or cov[1,0]
+    cov_xx = cov[0,0]
+    cov_yy = cov[1,1]
+    corr = cov_xy / ( cov_xx**0.5 * cov_yy**0.5  )
+    return corr
+
+def _cal_pcc_time(p_id, partial_data):
+    # print(f"p_id:{p_id} - data to run {partial_data.shape}")
+    pcc = []
+    for index in range(partial_data.shape[0]):
+        pcc_epoch = []
+        for comb in combinations(list(range(partial_data.shape[1])), 2):
+            pcc_ab = pearson_correlation(partial_data[index, comb[0], :], partial_data[index, comb[1], :]   )
+            pcc_epoch.append(pcc_ab)
+        pcc_epoch = np.hstack(pcc_epoch)
+        pcc.append(pcc_epoch)
+    pcc = np.vstack(pcc)
+    return pcc
+
+def PCC_TIME(data, variant: str) -> np.ndarray:
+    """ 
+    Input: Expect data to have (n_epochs, n_channels, n_samples)
+    Output: (n_epochs, n_conn ) => n_conn = n_channels!/(2!(n_channels-2)!)
+    """
+    epochs = convert_to_mne(data)
+    epochs = mne.preprocessing.compute_current_source_density(epochs)
+    data = epochs.get_data()
+    del(epochs)
+    t_out = 60000
+    pool = Pool()
+    p_list = []
+    ans_list = []
+    n_jobs = os.cpu_count() #type: int
+    try:
+        indices = np.array_split(np.arange(data.shape[0]), n_jobs)
+        for p_id in range(n_jobs):
+            p_list.append(pool.apply_async(_cal_pcc_time, [p_id, data[indices[p_id]] ]))
+        for p_id in range(n_jobs):
+            ans_list.append( p_list[p_id].get(timeout=t_out) )
+        # ans_list
+    except Exception as e:
+        print(e)
+    finally:
+        print("========= close ========")
+        pool.close() 
+        pool.terminate()
+    ans_list = np.vstack(ans_list)
+    return ans_list
