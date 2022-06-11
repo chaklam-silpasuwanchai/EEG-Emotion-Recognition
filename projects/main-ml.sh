@@ -8,13 +8,18 @@ do
         do
             for exp in "trial" "segment"
             do
+                name="./output/"$sub-$exp-$sti-$preprocessing-$seg".log" 
+                if test -f "$name"; then
+                    echo "$name exists."
+                    continue 
+                fi
                 cmd="python3 main-ml.py \
                         --subject_setup $sub \
                         --experimental_setup $exp \
                         --stimuli_class $sti \
                         --preprocessing $preprocessing \
                         --segment_lenght $seg\
-                        --output_log ./output/$sub-$exp-$sti-$preprocessing-$seg.log"
+                        --output_log $name"
                 echo $cmd
                 start=$(date +%s)
                 $cmd
