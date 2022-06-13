@@ -1,5 +1,7 @@
 # EEG Emotion Recognition (DEAP dataset)
 
+**This project is still on progress**
+
 *Authors: myself and my Ph.D. student Mr. Akraradet, and Master students Ms. Pranissa, Ms. Chanapa, and Mr. Pongkorn.*
 
 This repository compares different modeling approaches ranging from traditional machine learning algorithms and deep learning algorithms, by using emotion recognition from the benchmark DEAP dataset as the case study.
