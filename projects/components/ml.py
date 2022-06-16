@@ -1,3 +1,4 @@
+from xmlrpc.client import Boolean
 import numpy as np
 from sklearn.svm import SVC
 from sklearn.model_selection import StratifiedGroupKFold,GridSearchCV,StratifiedKFold
@@ -11,6 +12,12 @@ import logging
 
 def experimental_setup_interface(X:np.ndarray,y,groups,cv_result_prefix="") -> np.ndarray:
     return X
+
+def _check_is_done(checkpoint: str) -> Boolean:
+    if(os.path.exists(checkpoint) == True):
+        return True
+    return False
+
 
 def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     """
@@ -32,6 +39,8 @@ def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     for epoch, (idxs_train, idxs_test) in enumerate(cv_outter.split(X,y,groups)):
         start = time()
         print(f"BEGIN EPOCH: {epoch+1}/{n_split_outter}")
+        filename = f"{cv_result_prefix}-{epoch+1}.csv"
+        if(_check_is_done(filename)): continue
         X_train, X_test = X[idxs_train], X[idxs_test]
         y_train, y_test = y[idxs_train], y[idxs_test]
         groups_train, groups_test = groups[idxs_train], groups[idxs_test]
@@ -44,8 +53,8 @@ def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
         acc = sum(predict == y_test) / len(y_test)
         accs.append(acc)
         # save csv
-        logging.info(f"grid.best_params_={grid.best_params_}, grid.best_score_={grid.best_score_}, grid.best_index_={grid.best_index_}, acc={acc}, time={time()-start}" )
-        pd.DataFrame(grid.cv_results_).to_csv(f"{cv_result_prefix}-{epoch+1}.csv")
+        logging.info(f"{epoch+1}/{n_split_outter}|grid.best_params_={grid.best_params_}, grid.best_score_={grid.best_score_}, grid.best_index_={grid.best_index_}, acc={acc}, time={time()-start}" )
+        pd.DataFrame(grid.cv_results_).to_csv(filename)
     return np.array(accs)
 
 def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
@@ -68,6 +77,8 @@ def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     for epoch, (idxs_train, idxs_test) in enumerate(cv_outter.split(X,y)):
         start = time()
         print(f"BEGIN EPOCH: {epoch+1}/{n_split_outter}")
+        filename = f"{cv_result_prefix}-{epoch+1}.csv"
+        if(_check_is_done(filename)): continue
         X_train, X_test = X[idxs_train], X[idxs_test]
         y_train, y_test = y[idxs_train], y[idxs_test]
 
@@ -79,7 +90,7 @@ def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
         accs.append(acc)
         # save csv
         logging.info(f"{epoch+1}/{n_split_outter}|grid.best_params_={grid.best_params_}, grid.best_score_={grid.best_score_}, grid.best_index_={grid.best_index_}, acc={acc}, time={time()-start}" )
-        pd.DataFrame(grid.cv_results_).to_csv(f"{cv_result_prefix}-{epoch+1}.csv")
+        pd.DataFrame(grid.cv_results_).to_csv(filename)
     return np.array(accs)
 
 def build_model(X,y,groups=None) -> GridSearchCV:
