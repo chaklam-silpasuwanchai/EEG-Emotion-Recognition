@@ -94,7 +94,7 @@ def pearson_correlation(x,y):
     corr = cov_xy / ( cov_xx**0.5 * cov_yy**0.5  )
     return corr
 
-def _cal_pcc_time(p_id, partial_data):
+def _cal_pcc(p_id, partial_data):
     # print(f"p_id:{p_id} - data to run {partial_data.shape}")
     pcc = []
     for index in range(partial_data.shape[0]):
@@ -107,27 +107,17 @@ def _cal_pcc_time(p_id, partial_data):
     pcc = np.vstack(pcc)
     return pcc
 
-def PCC_TIME(data, variant: str) -> np.ndarray:
-    """ 
-    Input: Expect data to have (n_epochs, n_channels, n_samples)
-    Output: (n_epochs, n_conn ) => n_conn = n_channels!/(2!(n_channels-2)!)
-    """
-    epochs = convert_to_mne(data)
-    epochs = mne.preprocessing.compute_current_source_density(epochs)
-    data = epochs.get_data()
-    del(epochs)
+def _parallel(data:np.ndarray, n_jobs:int = 1) -> np.ndarray:
     t_out = 60000
     pool = Pool()
     p_list = []
     ans_list = []
-    n_jobs = os.cpu_count() #type: int
     try:
         indices = np.array_split(np.arange(data.shape[0]), n_jobs)
         for p_id in range(n_jobs):
-            p_list.append(pool.apply_async(_cal_pcc_time, [p_id, data[indices[p_id]] ]))
+            p_list.append(pool.apply_async(_cal_pcc, [p_id, data[indices[p_id]] ]))
         for p_id in range(n_jobs):
             ans_list.append( p_list[p_id].get(timeout=t_out) )
-        # ans_list
     except Exception as e:
         print(e)
     finally:
@@ -136,3 +126,34 @@ def PCC_TIME(data, variant: str) -> np.ndarray:
         pool.terminate()
     ans_list = np.vstack(ans_list)
     return ans_list
+
+def PCC(data, variant: str) -> np.ndarray:
+    """ 
+    Input: Expect data to have (n_epochs, n_channels, n_samples)
+    Output: (n_epochs, n_conn ) => n_conn = n_channels!/(2!(n_channels-2)!)
+    """
+    assert variant in ['PCC_TIME', 'PCC_FREQ'], f"Variant={variant} is not valid. Variant must be {['PCC_TIME', 'PCC_FREQ']}."
+    epochs = convert_to_mne(data)
+    epochs = mne.preprocessing.compute_current_source_density(epochs)
+    data = epochs.get_data()
+    del(epochs)
+    if(variant == 'PCC_TIME'):
+        pass
+    elif(variant == 'PCC_FREQ'):
+        data = _calculate_fft(data, 128)
+    else:
+        # I'm paranoid
+        ValueError(f"Variant={variant} is not valid. Variant must be {['PCC_TIME', 'PCC_FREQ']}.")
+    ans_list = _parallel(data, n_jobs=os.cpu_count())
+    return ans_list
+ 
+def _calculate_fft(signal:np.ndarray, sfreq:int) -> np.ndarray:
+    """ signal: can be 1D array of (n_sample,), 2D array of (n_signal, n_sample), or 3D array of (n_epoch, n_signal, n_sample) """
+    # the result will be a complex number. We can obtain the magnitude using `absolute`
+    magnitude = np.abs(np.fft.fft(signal, n=sfreq, axis=-1))
+    # scale the result
+    magnitude = magnitude / (sfreq/2)
+    # Selecting the range
+    magnitude = magnitude.T[:sfreq//2].T
+    freq_range= np.fft.fftfreq(sfreq, d=1/sfreq)[:sfreq//2]
+    return magnitude

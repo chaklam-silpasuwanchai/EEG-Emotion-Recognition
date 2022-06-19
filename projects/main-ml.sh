@@ -1,5 +1,5 @@
 #/bin/bash
-preprocessing="PCC_TIME"
+preprocessing="PCC_FREQ"
 for seg in 60 20 12 1
 do
     for sub in "dependent" "independent"
