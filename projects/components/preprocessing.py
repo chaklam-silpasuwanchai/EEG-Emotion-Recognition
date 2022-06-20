@@ -144,7 +144,7 @@ def PCC(data, variant: str) -> np.ndarray:
     else:
         # I'm paranoid
         ValueError(f"Variant={variant} is not valid. Variant must be {['PCC_TIME', 'PCC_FREQ']}.")
-    ans_list = _parallel(data, n_jobs=os.cpu_count())
+    ans_list = _parallel(data, n_jobs=os.cpu_count()) #type: ignore
     return ans_list
  
 def _calculate_fft(signal:np.ndarray, sfreq:int) -> np.ndarray:

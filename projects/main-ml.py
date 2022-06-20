@@ -6,6 +6,7 @@ import os
 import logging
 import argparse
 import numpy as np
+import re 
 
 def get_argument() -> argparse.Namespace:
     # python filename -h description
@@ -18,6 +19,27 @@ def get_argument() -> argparse.Namespace:
     parser.add_argument('--experimental_setup','-es', metavar='EX',type=str,default='trial',           help="The configuration when spliting data. 'trial' will split data such that no single trial exist in both train and test. 'segment' assume each segment is independent, thus segments from one trial can exist in both train and test.")
     # TODO: write parameters 
     return parser.parse_args()
+
+def get_10_cv_line(log_path:str) -> list:
+    pattern = "10-CV"
+    lines = []
+    with open(log_path, 'r') as f:
+        # last_line = f.readlines()[-1]
+        for line in f:
+            if(re.search(pattern,line)):
+                if(re.search("final",line)):
+                    continue
+                else:
+                    lines.append(line)
+    return lines
+
+def get_done_list(log_path:str) -> list:
+    lines = get_10_cv_line(log_path)
+    done_list = []
+    for line in lines:
+        time,log_type,filename,cv_txt,std_txt,elapse = line.split('|')
+        done_list.append(filename)
+    return done_list
 
 
 if __name__ == '__main__':
@@ -81,7 +103,11 @@ if __name__ == '__main__':
     cv_scores_final, cv_scores_std_final = [], []
     # When pass "dependent": the class will return list of filenames
     # When pass "independent": the class will return ['all']
+    done_list = get_done_list(args.output_log)
     for filename in dataset.get_file_list(args.subject_setup):
+        if(filename in done_list): 
+            print(filename, "is done.")
+            continue
         start = time()
         data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
 
