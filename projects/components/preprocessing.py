@@ -1,6 +1,8 @@
+from typing import Tuple
 import mne
 from mne_features.feature_extraction import FeatureExtractor
 import numpy as np
+from scipy import signal
 
 import logging
 from multiprocessing import Pool
@@ -107,7 +109,7 @@ def _cal_pcc(p_id, partial_data):
     pcc = np.vstack(pcc)
     return pcc
 
-def _parallel(data:np.ndarray, n_jobs:int = 1) -> np.ndarray:
+def _parallel(data:np.ndarray, func_call, n_jobs:int = 1) -> np.ndarray:
     t_out = 60000
     pool = Pool()
     p_list = []
@@ -115,7 +117,7 @@ def _parallel(data:np.ndarray, n_jobs:int = 1) -> np.ndarray:
     try:
         indices = np.array_split(np.arange(data.shape[0]), n_jobs)
         for p_id in range(n_jobs):
-            p_list.append(pool.apply_async(_cal_pcc, [p_id, data[indices[p_id]] ]))
+            p_list.append(pool.apply_async(func_call, [p_id, data[indices[p_id]] ]))
         for p_id in range(n_jobs):
             ans_list.append( p_list[p_id].get(timeout=t_out) )
     except Exception as e:
@@ -144,7 +146,7 @@ def PCC(data, variant: str) -> np.ndarray:
     else:
         # I'm paranoid
         ValueError(f"Variant={variant} is not valid. Variant must be {['PCC_TIME', 'PCC_FREQ']}.")
-    ans_list = _parallel(data, n_jobs=os.cpu_count()) #type: ignore
+    ans_list = _parallel(data, _cal_pcc, n_jobs=os.cpu_count()) #type: ignore
     return ans_list
  
 def _calculate_fft(signal:np.ndarray, sfreq:int) -> np.ndarray:
@@ -157,3 +159,51 @@ def _calculate_fft(signal:np.ndarray, sfreq:int) -> np.ndarray:
     magnitude = magnitude.T[:sfreq//2].T
     freq_range= np.fft.fftfreq(sfreq, d=1/sfreq)[:sfreq//2]
     return magnitude
+
+def _calculate_stft(signals: np.ndarray, sfreq: int):
+    f_range, t_range, Z = signal.stft(signals, sfreq, nperseg=sfreq//10, nfft=sfreq)
+    magnitude = np.abs(Z) 
+    phase = np.angle(Z) #type: ignore
+    return magnitude, phase, f_range, t_range
+
+def _cal_plv(p_id, partial_data:np.ndarray) -> np.ndarray:
+    plv = []
+    # count = 0
+    for index in range(partial_data.shape[0]):
+        plv_epoch = []
+        _,phase,_,_ = _calculate_stft(partial_data[index],128) #type: ignore
+        for comb in combinations(list(range(partial_data.shape[1])), 2):
+            # shape = (65,time)
+            phase_a, phase_b = phase[comb[0]], phase[comb[1]]
+            phase_diff = phase_a - phase_b
+            # sum along the time size
+            plv_ab = np.abs(np.average(np.exp(complex(0,1) * phase_diff), axis=1))
+            plv_epoch.append(plv_ab)
+        plv_epoch = np.vstack(plv_epoch)
+        # print(plv_epoch.shape) => (496, 65)
+        # 496 is number of pairs that is not duplicate
+        # 65 is number of phase of frequencies
+        plv_epoch_5 = np.concatenate([ plv_epoch[:,0:4].mean(axis=1).reshape(-1,1),
+                                        plv_epoch[:,4:8].mean(axis=1).reshape(-1,1),
+                                        plv_epoch[:,8:12].mean(axis=1).reshape(-1,1),
+                                        plv_epoch[:,12:30].mean(axis=1).reshape(-1,1),
+                                        plv_epoch[:,30:65].mean(axis=1).reshape(-1,1)], axis=0).squeeze()
+        # print(plv_epoch.shape) => (496 * 5,)
+        plv.append(np.expand_dims(plv_epoch_5, axis=0))
+        # count += 1
+        # if(count == 3): break
+    plv = np.vstack( plv )
+    return plv
+
+def PLV(data: np.ndarray, variant:str) -> np.ndarray:
+    """ 
+    Input: Expect data to have (n_epochs, n_channels, n_samples)
+    Output: (n_epochs, n_conn, 5 ) => n_conn = n_channels!/(2!(n_channels-2)!)
+    """
+    epochs = convert_to_mne(data)
+    epochs = mne.preprocessing.compute_current_source_density(epochs)
+    data = epochs.get_data()
+    del(epochs)
+    ans_list = _parallel(data, _cal_plv, n_jobs=os.cpu_count()) #type: ignore
+    assert ans_list.shape == (data.shape[0], 496*5), f"ans_list.shape={ans_list.shape}, data.shape={data.shape}"
+    return ans_list
