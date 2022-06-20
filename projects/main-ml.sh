@@ -16,6 +16,11 @@ do
                         --preprocessing $preprocessing \
                         --segment_lenght $seg\
                         --output_log $name"
+                final=`grep final $name | wc -l`
+                if [ $final -gt 0 ]; then
+                    echo "$name is done. final = $final"
+                    continue
+                fi
                 # if test -f "$name"; then
                 #     echo "$name exists."
                 #     cmd="$cmd --continue 1"
