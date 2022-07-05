@@ -1,0 +1,116 @@
+30-06-2022 00:15:21|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup segment --stimuli_class valence --preprocessing PCC_FREQ --segment_lenght 1 --output_log ./output/independent-segment-valence-PCC_FREQ-1.log
+    Starting training:
+        segment_lenght:  1
+        output_log:      ./output/independent-segment-valence-PCC_FREQ-1.log
+        stimuli_class:   valence
+        preprocessing:   PCC_FREQ
+        subject_setup:   independent
+        experimental_setup: segment
+    
+30-06-2022 00:22:20|INFO|Running Split-First
+30-06-2022 00:22:20|INFO|X.shape=(76800, 496), y.shape=(76800,), groups.shape=(76800,)
+30-06-2022 00:22:20|INFO|Is groups None: True 
+30-06-2022 01:41:38|ERROR|exception calling callback for <Future at 0x7f60bfea6070 state=finished raised TerminatedWorkerError>
+Traceback (most recent call last):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/_base.py", line 625, in _invoke_callbacks
+    callback(self)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 359, in __call__
+    self.parallel.dispatch_next()
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 794, in dispatch_next
+    if not self.dispatch_one_batch(self._original_iterator):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 861, in dispatch_one_batch
+    self._dispatch(tasks)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 779, in _dispatch
+    job = self._backend.apply_async(batch, callback=cb)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/_parallel_backends.py", line 531, in apply_async
+    future = self._workers.submit(SafeFunction(func))
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/reusable_executor.py", line 177, in submit
+    return super(_ReusablePoolExecutor, self).submit(
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py", line 1115, in submit
+    raise self._flags.broken
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+The exit codes of the workers are {SIGSEGV(-11)}
+01-07-2022 10:22:18|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup segment --stimuli_class valence --preprocessing PCC_FREQ --segment_lenght 1 --output_log ./output/independent-segment-valence-PCC_FREQ-1.log
+    Starting training:
+        segment_lenght:  1
+        output_log:      ./output/independent-segment-valence-PCC_FREQ-1.log
+        stimuli_class:   valence
+        preprocessing:   PCC_FREQ
+        subject_setup:   independent
+        experimental_setup: segment
+    
+01-07-2022 10:29:32|INFO|Running Split-First
+01-07-2022 10:29:32|INFO|X.shape=(76800, 496), y.shape=(76800,), groups.shape=(76800,)
+01-07-2022 10:29:32|INFO|Is groups None: True 
+01-07-2022 13:48:01|INFO|1/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5596788194444444, grid.best_index_=12, acc=0.5384114583333334, time=11909.509786128998
+01-07-2022 13:48:01|INFO|Is groups None: True 
+01-07-2022 17:05:05|INFO|2/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5591145833333333, grid.best_index_=12, acc=0.5528645833333333, time=11823.89593076706
+01-07-2022 17:05:05|INFO|Is groups None: True 
+01-07-2022 20:20:26|INFO|3/10|grid.best_params_={'C': 0.01, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5589699074074075, grid.best_index_=5, acc=0.5545572916666667, time=11720.582160711288
+01-07-2022 20:20:26|INFO|Is groups None: True 
+01-07-2022 23:36:41|INFO|4/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5602285879629629, grid.best_index_=12, acc=0.5502604166666667, time=11775.35001039505
+01-07-2022 23:36:41|INFO|Is groups None: True 
+02-07-2022 02:51:22|INFO|5/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5604166666666666, grid.best_index_=12, acc=0.5475260416666666, time=11681.07399725914
+02-07-2022 02:51:22|INFO|Is groups None: True 
+02-07-2022 06:05:01|INFO|6/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5599103009259259, grid.best_index_=12, acc=0.55234375, time=11618.243902921677
+02-07-2022 06:05:01|INFO|Is groups None: True 
+02-07-2022 09:25:09|INFO|7/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5581452546296296, grid.best_index_=12, acc=0.5494791666666666, time=12008.628385782242
+02-07-2022 09:25:09|INFO|Is groups None: True 
+02-07-2022 12:39:26|INFO|8/10|grid.best_params_={'C': 0.01, 'gamma': 0.1, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5566406249999999, grid.best_index_=4, acc=0.5567708333333333, time=11656.335235357285
+02-07-2022 12:39:26|INFO|Is groups None: True 
+02-07-2022 15:41:37|ERROR|exception calling callback for <Future at 0x7fd5d9ee3cd0 state=finished raised TerminatedWorkerError>
+Traceback (most recent call last):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/_base.py", line 625, in _invoke_callbacks
+    callback(self)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 359, in __call__
+    self.parallel.dispatch_next()
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 794, in dispatch_next
+    if not self.dispatch_one_batch(self._original_iterator):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 861, in dispatch_one_batch
+    self._dispatch(tasks)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 779, in _dispatch
+    job = self._backend.apply_async(batch, callback=cb)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/_parallel_backends.py", line 531, in apply_async
+    future = self._workers.submit(SafeFunction(func))
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/reusable_executor.py", line 177, in submit
+    return super(_ReusablePoolExecutor, self).submit(
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py", line 1115, in submit
+    raise self._flags.broken
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+The exit codes of the workers are {SIGSEGV(-11)}
+04-07-2022 20:52:07|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup segment --stimuli_class valence --preprocessing PCC_FREQ --segment_lenght 1 --output_log ./output/independent-segment-valence-PCC_FREQ-1.log
+    Starting training:
+        segment_lenght:  1
+        output_log:      ./output/independent-segment-valence-PCC_FREQ-1.log
+        stimuli_class:   valence
+        preprocessing:   PCC_FREQ
+        subject_setup:   independent
+        experimental_setup: segment
+    
+04-07-2022 20:56:58|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup segment --stimuli_class valence --preprocessing PCC_FREQ --segment_lenght 1 --output_log ./output/independent-segment-valence-PCC_FREQ-1.log
+    Starting training:
+        segment_lenght:  1
+        output_log:      ./output/independent-segment-valence-PCC_FREQ-1.log
+        stimuli_class:   valence
+        preprocessing:   PCC_FREQ
+        subject_setup:   independent
+        experimental_setup: segment
+    
+04-07-2022 21:03:38|INFO|Running Split-First
+04-07-2022 21:03:38|INFO|X.shape=(76800, 496), y.shape=(76800,), groups.shape=(76800,)
+04-07-2022 21:03:38|INFO|Is groups None: True 
+05-07-2022 00:19:32|INFO|9/10|grid.best_params_={'C': 1.0, 'gamma': 10.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5597511574074076, grid.best_index_=12, acc=0.55390625, time=11754.213343143463
+05-07-2022 00:19:32|INFO|Is groups None: True 
+05-07-2022 03:34:47|INFO|10/10|grid.best_params_={'C': 0.01, 'gamma': 1000.0, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.553125, grid.best_index_=6, acc=0.553125, time=11715.648968696594
+05-07-2022 03:34:47|INFO|all|10-CV=0.55352|STD=0.00039|Time spend=23869.68243122101
+05-07-2022 03:34:47|INFO|final|10-CV=0.55352|STD=0.00000
