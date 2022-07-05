@@ -1,7 +1,7 @@
 from time import time
 from components.dataset_jo import Dataset_subjectDependent as MyDataset
 from components.ml import experimental_setup_interface, train_model_segment_first, train_model_split_first
-from components.preprocessing import preprocess_interface, standardize, DE, ASYM, PCC
+from components.preprocessing import preprocess_interface, standardize, DE, ASYM, PCC, PLV
 import os
 import logging
 import argparse
@@ -43,7 +43,7 @@ def get_done_list(log_path:str) -> list:
 
 
 if __name__ == '__main__':
-    preprocessing_option = ['DE','DASM','RASM','DCAU','PCC_TIME', 'PCC_FREQ']
+    preprocessing_option = ['DE','DASM','RASM','DCAU','PCC_TIME','PCC_FREQ','PLV']
     args = get_argument()
     # Start logging
     logging.basicConfig(filename=f'{args.output_log}',
@@ -92,6 +92,8 @@ if __name__ == '__main__':
         preprocessing = ASYM
     elif(args.preprocessing in ['PCC_TIME', 'PCC_FREQ']):
         preprocessing = PCC
+    elif(args.preprocessing in ['PLV']):
+        preprocessing = PLV
 
     # assign experimental_setup
     experimental_setup = experimental_setup_interface
