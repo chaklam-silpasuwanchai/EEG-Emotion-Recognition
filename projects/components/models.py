@@ -277,3 +277,55 @@ class Conv1D_LSTM_MultiHeadSelfAttention(nn.Module):
 
         return self.fc(attn_output)
     
+# Convolutional neural network (two convolutional layers)
+class CNN2D(nn.Module):
+    def __init__(self, input_dim, output_dim, fc_shape):
+        super(CNN2D, self).__init__()
+        
+        #using sequential helps bind multiple operations together
+        self.layer1 = nn.Sequential(
+            #in_channel = 32, #out_channel = 64
+            nn.Conv2d(input_dim, input_dim*2, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(input_dim*2),
+            nn.ReLU())
+        
+        self.layer2 = nn.Sequential(
+            nn.Conv2d(input_dim*2, input_dim*4, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(input_dim*4),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2))
+        
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(input_dim*4, input_dim*8, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(input_dim*8),
+            nn.ReLU())
+            
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(input_dim*8, input_dim*16, kernel_size=3, stride=1, padding=1),
+            nn.BatchNorm2d(input_dim*16),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2))
+        
+        self.fc = nn.Linear(fc_shape, output_dim)
+
+        self.drop_out = nn.Dropout(p=0.2)  #zeroed 0.2% data
+        #after fc will be of shape [batch, 1]
+        
+    def forward(self, x):
+        #x shape: [batch, in_channel, img_width, img_height]
+        out = self.layer1(x)
+        out = self.drop_out(out)
+        out = self.layer2(out)
+        out = self.drop_out(out)
+        out = self.layer3(out)
+        out = self.drop_out(out)
+        out = self.layer4(out)
+        out = self.drop_out(out)
+        
+        out = out.reshape(out.size(0), -1)   #can also use .view()
+        #we squeeze so that it can be inputted into the fc layer
+        
+        out = self.fc(out)
+        #after fc layer: shape: [batch, 1]
+        return out
+    
