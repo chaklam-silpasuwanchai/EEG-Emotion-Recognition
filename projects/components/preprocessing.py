@@ -166,44 +166,71 @@ def _calculate_stft(signals: np.ndarray, sfreq: int):
     phase = np.angle(Z) #type: ignore
     return magnitude, phase, f_range, t_range
 
-def _cal_plv(p_id, partial_data:np.ndarray) -> np.ndarray:
-    plv = []
+def _cal_plv(phase_diff):
+    return np.abs(np.average(np.exp(complex(0,1) * phase_diff), axis=1))
+
+def _cal_pli(phase_diff):
+    return np.abs(np.average(np.sign(np.imag(np.exp(complex(0,1) * phase_diff))), axis=1))
+
+def _cal_phase(p_id, partial_data:np.ndarray, equation) -> np.ndarray:
+    results = []
     # count = 0
     for index in range(partial_data.shape[0]):
-        plv_epoch = []
+        result_epoch = []
         _,phase,_,_ = _calculate_stft(partial_data[index],128) #type: ignore
         for comb in combinations(list(range(partial_data.shape[1])), 2):
             # shape = (65,time)
             phase_a, phase_b = phase[comb[0]], phase[comb[1]]
             phase_diff = phase_a - phase_b
             # sum along the time size
-            plv_ab = np.abs(np.average(np.exp(complex(0,1) * phase_diff), axis=1))
-            plv_epoch.append(plv_ab)
-        plv_epoch = np.vstack(plv_epoch)
-        # print(plv_epoch.shape) => (496, 65)
+            phase_ab = equation(phase_diff)
+            result_epoch.append(phase_ab)
+        result_epoch = np.vstack(result_epoch)
+        # print(result_epoch.shape) => (496, 65)
         # 496 is number of pairs that is not duplicate
         # 65 is number of phase of frequencies
-        plv_epoch_5 = np.concatenate([ plv_epoch[:,0:4].mean(axis=1).reshape(-1,1),
-                                        plv_epoch[:,4:8].mean(axis=1).reshape(-1,1),
-                                        plv_epoch[:,8:12].mean(axis=1).reshape(-1,1),
-                                        plv_epoch[:,12:30].mean(axis=1).reshape(-1,1),
-                                        plv_epoch[:,30:65].mean(axis=1).reshape(-1,1)], axis=0).squeeze()
-        # print(plv_epoch.shape) => (496 * 5,)
-        plv.append(np.expand_dims(plv_epoch_5, axis=0))
+        result_epoch_5 = np.concatenate([ result_epoch[:,0:4].mean(axis=1).reshape(-1,1),
+                                        result_epoch[:,4:8].mean(axis=1).reshape(-1,1),
+                                        result_epoch[:,8:12].mean(axis=1).reshape(-1,1),
+                                        result_epoch[:,12:30].mean(axis=1).reshape(-1,1),
+                                        result_epoch[:,30:65].mean(axis=1).reshape(-1,1)], axis=0).squeeze()
+        # print(result_epoch.shape) => (496 * 5,)
+        results.append(np.expand_dims(result_epoch_5, axis=0))
         # count += 1
         # if(count == 3): break
-    plv = np.vstack( plv )
-    return plv
+    results = np.vstack( results )
+    return results
 
-def PLV(data: np.ndarray, variant:str) -> np.ndarray:
+def PHASE_LAG(data: np.ndarray, variant:str) -> np.ndarray:
     """ 
     Input: Expect data to have (n_epochs, n_channels, n_samples)
-    Output: (n_epochs, n_conn, 5 ) => n_conn = n_channels!/(2!(n_channels-2)!)
+    Output: (n_epochs, n_conn * 5 ) => n_conn = n_channels!/(2!(n_channels-2)!)
     """
     epochs = convert_to_mne(data)
     epochs = mne.preprocessing.compute_current_source_density(epochs)
     data = epochs.get_data()
     del(epochs)
-    ans_list = _parallel(data, _cal_plv, n_jobs=os.cpu_count()) #type: ignore
+    equation = _cal_plv if variant == 'PLV' else _cal_pli
+    ans_list = _parallel2(data, _cal_phase, equation, n_jobs=os.cpu_count()) #type: ignore
     assert ans_list.shape == (data.shape[0], 496*5), f"ans_list.shape={ans_list.shape}, data.shape={data.shape}"
+    return ans_list
+
+def _parallel2(data:np.ndarray, func_call, func_call2, n_jobs:int = 1) -> np.ndarray:
+    t_out = 60000
+    pool = Pool()
+    p_list = []
+    ans_list = []
+    try:
+        indices = np.array_split(np.arange(data.shape[0]), n_jobs)
+        for p_id in range(n_jobs):
+            p_list.append(pool.apply_async(func_call, [p_id, data[indices[p_id]], func_call2 ]))
+        for p_id in range(n_jobs):
+            ans_list.append( p_list[p_id].get(timeout=t_out) )
+    except Exception as e:
+        print(e)
+    finally:
+        print("========= close ========")
+        pool.close() 
+        pool.terminate()
+    ans_list = np.vstack(ans_list)
     return ans_list
