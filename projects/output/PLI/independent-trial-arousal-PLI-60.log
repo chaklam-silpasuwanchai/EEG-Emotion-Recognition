@@ -1,0 +1,70 @@
+20-07-2022 23:12:03|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup trial --stimuli_class arousal --preprocessing PLI --segment_lenght 60 --output_log ./output/independent-trial-arousal-PLI-60.log
+    Starting training:
+        segment_lenght:  60
+        output_log:      ./output/independent-trial-arousal-PLI-60.log
+        stimuli_class:   arousal
+        preprocessing:   PLI
+        subject_setup:   independent
+        experimental_setup: trial
+    
+20-07-2022 23:18:59|INFO|Running Segment-First
+20-07-2022 23:18:59|INFO|X.shape=(1280, 2480), y.shape=(1280,), groups.shape=(1280,)
+20-07-2022 23:19:00|INFO|Is groups None: False 
+20-07-2022 23:20:26|ERROR|exception calling callback for <Future at 0x7fa11f07cfa0 state=finished raised TerminatedWorkerError>
+Traceback (most recent call last):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/_base.py", line 625, in _invoke_callbacks
+    callback(self)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 359, in __call__
+    self.parallel.dispatch_next()
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 794, in dispatch_next
+    if not self.dispatch_one_batch(self._original_iterator):
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 861, in dispatch_one_batch
+    self._dispatch(tasks)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/parallel.py", line 779, in _dispatch
+    job = self._backend.apply_async(batch, callback=cb)
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/_parallel_backends.py", line 531, in apply_async
+    future = self._workers.submit(SafeFunction(func))
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/reusable_executor.py", line 177, in submit
+    return super(_ReusablePoolExecutor, self).submit(
+  File "/root/projects/.venv/lib/python3.8/site-packages/joblib/externals/loky/process_executor.py", line 1115, in submit
+    raise self._flags.broken
+joblib.externals.loky.process_executor.TerminatedWorkerError: A worker process managed by the executor was unexpectedly terminated. This could be caused by a segmentation fault while calling the function or by an excessive memory usage causing the Operating System to kill the worker.
+
+The exit codes of the workers are {SIGSEGV(-11)}
+20-07-2022 23:34:37|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup trial --stimuli_class arousal --preprocessing PLI --segment_lenght 60 --output_log ./output/independent-trial-arousal-PLI-60.log
+    Starting training:
+        segment_lenght:  60
+        output_log:      ./output/independent-trial-arousal-PLI-60.log
+        stimuli_class:   arousal
+        preprocessing:   PLI
+        subject_setup:   independent
+        experimental_setup: trial
+    
+20-07-2022 23:41:53|INFO|Running Segment-First
+20-07-2022 23:41:53|INFO|X.shape=(1280, 2480), y.shape=(1280,), groups.shape=(1280,)
+20-07-2022 23:41:54|INFO|Is groups None: False 
+20-07-2022 23:51:40|INFO|1/10|grid.best_params_={'C': 1.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5954861111111112, grid.best_index_=10, acc=0.59375, time=586.3556175231934
+20-07-2022 23:51:40|INFO|Is groups None: False 
+21-07-2022 00:01:09|INFO|2/10|grid.best_params_={'C': 1000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.59375, grid.best_index_=28, acc=0.5390625, time=568.8314936161041
+21-07-2022 00:01:09|INFO|Is groups None: False 
+21-07-2022 00:10:29|INFO|3/10|grid.best_params_={'C': 1.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5876736111111112, grid.best_index_=10, acc=0.59375, time=560.4492239952087
+21-07-2022 00:10:29|INFO|Is groups None: False 
+21-07-2022 00:19:49|INFO|4/10|grid.best_params_={'C': 1000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5911458333333334, grid.best_index_=28, acc=0.5546875, time=559.248788356781
+21-07-2022 00:19:49|INFO|Is groups None: False 
+21-07-2022 00:29:07|INFO|5/10|grid.best_params_={'C': 1.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6024305555555556, grid.best_index_=10, acc=0.5859375, time=558.6641049385071
+21-07-2022 00:29:07|INFO|Is groups None: False 
+21-07-2022 00:38:28|INFO|6/10|grid.best_params_={'C': 100.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5824652777777778, grid.best_index_=17, acc=0.6328125, time=560.932904958725
+21-07-2022 00:38:28|INFO|Is groups None: False 
+21-07-2022 00:47:48|INFO|7/10|grid.best_params_={'C': 1.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5894097222222222, grid.best_index_=10, acc=0.6015625, time=560.0788161754608
+21-07-2022 00:47:48|INFO|Is groups None: False 
+21-07-2022 00:57:07|INFO|8/10|grid.best_params_={'C': 100.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6137152777777778, grid.best_index_=17, acc=0.5546875, time=558.3311948776245
+21-07-2022 00:57:07|INFO|Is groups None: False 
+21-07-2022 01:06:25|INFO|9/10|grid.best_params_={'C': 100.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6032986111111112, grid.best_index_=17, acc=0.5546875, time=558.2302491664886
+21-07-2022 01:06:25|INFO|Is groups None: False 
+21-07-2022 01:15:45|INFO|10/10|grid.best_params_={'C': 100.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.5972222222222222, grid.best_index_=17, acc=0.6171875, time=560.3735489845276
+21-07-2022 01:15:45|INFO|all|10-CV=0.58281|STD=0.02927|Time spend=6068.532936811447
+21-07-2022 01:15:45|INFO|final|10-CV=0.58281|STD=0.00000

@@ -1,12 +1,14 @@
 #/bin/bash
-preprocessing="PCC_FREQ"
-for seg in 60 20 12 1
+preprocessing="PLI"
+for seg in 1
 do
-    for sub in "dependent" "independent"
+    # for sub in "dependent" "independent"
+    for sub in "independent"
     do
         for sti in "arousal" "valence"
         do
-            for exp in "trial" "segment"
+            # for exp in "trial" "segment"
+            for exp in "trial"
             do
                 name="./output/"$sub-$exp-$sti-$preprocessing-$seg".log" 
                 cmd="python3 main-ml.py \
