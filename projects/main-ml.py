@@ -1,5 +1,5 @@
 from time import time
-from components.dataset_jo import Dataset_subjectDependent as MyDataset
+from components.dataset_dependent import Dataset_subjectDependent as MyDataset
 from components.ml import experimental_setup_interface, train_model_segment_first, train_model_split_first
 from components.preprocessing import preprocess_interface, standardize, DE, ASYM, PCC, PHASE_LAG
 import os

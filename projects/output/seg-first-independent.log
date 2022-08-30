@@ -1,0 +1,112 @@
+device : cuda:0
+path : ./data
+stim : 0
+stim_name : VALENCE
+segment_number : 3
+params : {'batch_size': 16, 'shuffle': True, 'pin_memory': True}
+num_epochs : 30
+lr : 0.0001
+seq_len_first : False
+debug : False
+model_name : Conv1D_LSTM
+input_dim : 32
+hidden_dim : 256
+num_layers : 2
+output_dim : 1
+bidirectional : True
+dropout : 0.5
+len_reduction : None
+n_heads : 8
+d_k : 64
+segsplit : independent-seg
+output_path : ./output/independent-seg_20s/
+result_csv : ./output/independent-seg_20s/Conv1D_LSTM_result.csv
+The model Conv1D_LSTM has 2,187,873 trainable parameters
+Found: 32 files
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 2 Test Loss = 0.6899647290507952, Test Acc = 0.5546875
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6898608456055323, Test Acc = 0.5546875
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.688695860405763, Test Acc = 0.5546875
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 2 Test Loss = 0.6893147031466166, Test Acc = 0.5546875
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 4 Test Loss = 0.6894629299640656, Test Acc = 0.5572916666666666
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6902630403637886, Test Acc = 0.5520833333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 2 Test Loss = 0.6899289811650912, Test Acc = 0.5520833333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6886387864748637, Test Acc = 0.5520833333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 4 Test Loss = 0.6893383413553238, Test Acc = 0.5520833333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 8 Test Loss = 0.6883003860712051, Test Acc = 0.5520833333333334
+==================================================
+==================================================
+segsplit       independent-seg
+model_name     Conv1D_LSTM
+stim_name      VALENCE
+segment size   20 s
+all_test_acc :  [0.5546875, 0.5546875, 0.5546875, 0.5546875, 0.5572916666666666, 0.5520833333333334, 0.5520833333333334, 0.5520833333333334, 0.5520833333333334, 0.5520833333333334]
+AVG all_test_acc :  0.5536458333333333
+SD  all_test_acc :  0.0017274087449767462
+==================================================
+==================================================
+device : cuda:0
+path : ./data
+stim : 1
+stim_name : AROUSAL
+segment_number : 3
+params : {'batch_size': 16, 'shuffle': True, 'pin_memory': True}
+num_epochs : 30
+lr : 0.0001
+seq_len_first : False
+debug : False
+model_name : Conv1D_LSTM
+input_dim : 32
+hidden_dim : 256
+num_layers : 2
+output_dim : 1
+bidirectional : True
+dropout : 0.5
+len_reduction : None
+n_heads : 8
+d_k : 64
+segsplit : independent-seg
+output_path : ./output/independent-seg_20s/
+result_csv : ./output/independent-seg_20s/Conv1D_LSTM_result.csv
+The model Conv1D_LSTM has 2,187,873 trainable parameters
+Found: 32 files
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 5 Test Loss = 0.6853400493661562, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6863509888450304, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6855590691169103, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 2 Test Loss = 0.6861936574180921, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 5 Test Loss = 0.6863448396325111, Test Acc = 0.5859375
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 3 Test Loss = 0.6861837034424146, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 6 Test Loss = 0.6846534038583437, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 4 Test Loss = 0.6861130023996035, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 8 Test Loss = 0.683295634885629, Test Acc = 0.5755208333333334
+Best epoch does not change for 7 epochs >> Break training loop
+FINAL Best Model from Best Epoch 10 Test Loss = 0.680827222764492, Test Acc = 0.578125
+==================================================
+==================================================
+segsplit       independent-seg
+model_name     Conv1D_LSTM
+stim_name      AROUSAL
+segment size   20 s
+all_test_acc :  [0.5755208333333334, 0.5755208333333334, 0.5755208333333334, 0.5755208333333334, 0.5859375, 0.5755208333333334, 0.5755208333333334, 0.5755208333333334, 0.5755208333333334, 0.578125]
+AVG all_test_acc :  0.5768229166666667
+SD  all_test_acc :  0.003135831921560481
+==================================================
+==================================================

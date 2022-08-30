@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
-import time
+import time, copy
 from components.helper import epoch_time, binary_accuracy
 
-def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, device, seq_len_first=False):
+def train(num_epochs, model, train_loader, val_loader, test_loader, optimizer, criterion, device, seq_len_first=False):
     best_valid_loss = float('inf')
 
     train_losses = []
@@ -11,13 +11,13 @@ def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, dev
     valid_losses = []
     valid_accs   = []
     epoch_times   = []
+    list_best_epochs = []
 
     for epoch in range(num_epochs):
-
         start_time = time.time()
 
-        train_loss, train_acc = _train(model, train_loader, optimizer, criterion, device, seq_len_first)
-        valid_loss, valid_acc = evaluate(model, val_loader, criterion, device, seq_len_first)
+        train_loss, train_acc    = _train(model, train_loader, optimizer, criterion, device, seq_len_first)
+        valid_loss, valid_acc, _ = evaluate(model, val_loader, criterion, device, seq_len_first)
         
         # for plotting
         train_losses.append(train_loss)
@@ -30,11 +30,23 @@ def train(num_epochs, model, train_loader, val_loader, optimizer, criterion, dev
         epoch_times.append((epoch_mins, epoch_secs))
         
         if valid_loss < best_valid_loss:
-        
             best_valid_loss = valid_loss
-            print(f'Best Epoch : {epoch+1:02} | Epoch Time: {epoch_mins}m {epoch_secs}s')
-            print(f'\t Train Loss: {train_loss:.3f} | Train Acc: {train_acc*100:.2f}% Val. Loss: {valid_loss:.3f}  |  Val. Acc: {valid_acc*100:.2f}%')
-    return train_losses, valid_losses, train_accs, valid_accs, epoch_times
+            best_model = copy.deepcopy(model)
+            best_epoch = epoch
+            
+        list_best_epochs.append(best_epoch)
+        
+        if (len(list_best_epochs) > 7) and (best_epoch == list_best_epochs[-7]):
+            print("Best epoch does not change for 7 epochs >> Break training loop")
+            break
+            
+    test_loss, test_acc, test_predictions = evaluate(best_model, test_loader, criterion, device, seq_len_first)
+    print(f"FINAL Best Model from Best Epoch {best_epoch} Test Loss = {test_loss}, Test Acc = {test_acc}")
+    # print("="*50)
+        
+    return train_losses, valid_losses, train_accs, valid_accs, test_loss, test_acc, best_epoch, epoch_times
+
+
         
 def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=False):
 
@@ -43,8 +55,7 @@ def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=Fal
     epoch_train_acc  = 0
 
     for i, batch in enumerate(train_loader):
-    
-        if(seq_len_first):
+        if (seq_len_first):
             # data shape: (batch, seq len, channel)
             data  = batch[0].to(device).permute(0, 2, 1)    
         else:
@@ -53,10 +64,9 @@ def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=Fal
         
         # label shape: (batch, 1)
         label = batch[1].to(device) 
-        
+
         #predict
         output = model(data)  #output shape: (batch, 1)
-        
         
         loss   = criterion(output, label)
         
@@ -64,7 +74,7 @@ def _train(model, train_loader,  optimizer, criterion, device, seq_len_first=Fal
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        
+
         #for visualizing
         epoch_train_loss += loss.item()
         acc = binary_accuracy(output, label)
@@ -81,6 +91,8 @@ def evaluate(model, val_loader, criterion, device, seq_len_first=False):
     model.eval()
     epoch_val_loss = 0
     epoch_val_acc  = 0
+    
+    all_predictions = []
 
     with torch.no_grad():
         for i, batch in enumerate(val_loader):
@@ -99,6 +111,9 @@ def evaluate(model, val_loader, criterion, device, seq_len_first=False):
             output = model(data)
             loss   = criterion(output, label)
             
+            rounded_preds = torch.round(torch.sigmoid(output)).long().flatten().tolist()
+            all_predictions.extend(rounded_preds)
+            
             #for visualizing
             epoch_val_loss += loss.item()
             acc = binary_accuracy(output, label)
@@ -107,5 +122,8 @@ def evaluate(model, val_loader, criterion, device, seq_len_first=False):
     epoch_val_loss =  epoch_val_loss / len(val_loader)
     epoch_val_acc  =  epoch_val_acc  / len(val_loader)
     
-    return epoch_val_loss, epoch_val_acc
+    # print(all_predictions)
+    # print(len(all_predictions))
+    
+    return epoch_val_loss, epoch_val_acc, all_predictions
 
