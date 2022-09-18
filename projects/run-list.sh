@@ -2,7 +2,7 @@
 jupyter nbconvert --to script *dl.ipynb
 
 
-# python3 -u split-first-dependent-dl.py --model_name LSTM --stim 0 --segment_number 1 --len_reduction None --isdebug False >> split-first-dependent.log
+python3 -u split-first-dependent-dl.py --model_name LSTM --stim 0 --segment_number 1 --len_reduction None --isdebug False >> split-first-dependent.log
 # python3 -u split-first-dependent-dl.py --model_name LSTM --stim 1 --segment_number 1 --len_reduction None --isdebug False >> split-first-dependent.log
 # python3 -u split-first-dependent-dl.py --model_name LSTM --stim 0 --segment_number 3 --len_reduction None --isdebug False >> split-first-dependent.log
 # python3 -u split-first-dependent-dl.py --model_name LSTM --stim 1 --segment_number 3 --len_reduction None --isdebug False >> split-first-dependent.log

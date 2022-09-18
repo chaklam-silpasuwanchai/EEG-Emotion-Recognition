@@ -1,5 +1,5 @@
 from time import time
-from components.dataset_dependent import Dataset_subjectDependent as MyDataset
+from components.dataset import DatasetDEAP
 from components.ml import experimental_setup_interface, train_model_segment_first, train_model_split_first
 from components.preprocessing import preprocess_interface, standardize, DE, ASYM, PCC, PHASE_LAG
 import os
@@ -70,14 +70,14 @@ if __name__ == '__main__':
     # Load dataset from path ./data. Inside the path must be s01, s02, s03, ...
     # Lazyload mean the class will not load data if not use. This will save some RAM. 
     # But it will eventually load all the data because I did not write garbage collector
-    dataset = MyDataset(dataset_path='data', lazyload=True)
+    dataset = DatasetDEAP(dataset_path='data', lazyload=True)
     dataset.set_segment(7680//(128*args.segment_lenght))
 
     stimuli_class = int()
     if(args.stimuli_class == 'valence'):
-        stimuli_class = MyDataset.STIMULI_VALENCE
+        stimuli_class = DatasetDEAP.STIMULI_VALENCE
     elif(args.stimuli_class == 'arousal'):
-        stimuli_class = MyDataset.STIMULI_AROUSAL
+        stimuli_class = DatasetDEAP.STIMULI_AROUSAL
 
     # init output folder
     output_gridsearch_path = f"./output/gridSearch-{args.subject_setup}-{args.experimental_setup}-{args.stimuli_class}-{args.preprocessing}-{args.segment_lenght}"
@@ -111,7 +111,7 @@ if __name__ == '__main__':
             print(filename, "is done.")
             continue
         start = time()
-        data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class, return_type='numpy')
+        data, labels, groups = dataset.get_data(filename, stimuli=stimuli_class)
 
         X = preprocessing(data, variant=args.preprocessing)
         X = standardize(X)
