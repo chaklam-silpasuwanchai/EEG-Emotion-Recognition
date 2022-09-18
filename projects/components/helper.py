@@ -4,17 +4,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch.nn as nn
 
-
-# def get_freer_gpu():
-#     os.system('nvidia-smi -q -d Memory |grep -A4 GPU|grep Free >gpu_free')
-#     memory_available = [int(x.split()[2]) for x in open('gpu_free', 'r').readlines()]
-#     gpu = f'cuda:{np.argmax(memory_available)}'
-#     if os.path.exists("gpu_free"):
-#         os.remove("gpu_free")
-#     else:
-#           print("The file does not exist") 
-#     return gpu
-
 def get_freer_gpu():
     os.system('nvidia-smi -q -d Memory |grep -A4 GPU|grep Used >gpu_free')
     memory_available = [int(x.split()[2]) for x in open('gpu_free', 'r').readlines()]
@@ -24,7 +13,6 @@ def get_freer_gpu():
     else:
           print("The file does not exist") 
     return gpu
-
 
 # explicitly initialize weights for better learning
 def initialize_weights(m):

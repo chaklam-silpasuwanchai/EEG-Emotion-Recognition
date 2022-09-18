@@ -19,7 +19,7 @@ def _check_is_done(checkpoint: str) -> Boolean:
     return False
 
 
-def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
+def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     """
         X: The sample set with shape of (n_samples, n_features)
         y: The labels with shape of (n_samples,)
@@ -57,7 +57,7 @@ def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
         pd.DataFrame(grid.cv_results_).to_csv(filename)
     return np.array(accs)
 
-def train_model_split_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
+def train_model_segment_first(X,y,groups,cv_result_prefix="") -> np.ndarray:
     """
         X: The sample set with shape of (n_samples, n_features)
         y: The labels with shape of (n_samples,)

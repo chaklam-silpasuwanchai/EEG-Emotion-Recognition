@@ -97,9 +97,9 @@ if __name__ == '__main__':
 
     # assign experimental_setup
     experimental_setup = experimental_setup_interface
-    if(args.experimental_setup == 'trial'):
+    if(args.experimental_setup == 'segment'):
         experimental_setup = train_model_segment_first
-    elif(args.experimental_setup == 'segment'):
+    elif(args.experimental_setup == 'trial'):
         experimental_setup = train_model_split_first
 
     cv_scores_final, cv_scores_std_final = [], []

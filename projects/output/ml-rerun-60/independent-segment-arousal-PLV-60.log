@@ -1,0 +1,35 @@
+04-09-2022 05:42:31|INFO|
+    Running Command: 
+        python3 main-ml.py --subject_setup independent --experimental_setup segment --stimuli_class arousal --preprocessing PLV --segment_lenght 60 --output_log ./output/independent-segment-arousal-PLV-60.log
+    Starting training:
+        segment_lenght:  60
+        output_log:      ./output/independent-segment-arousal-PLV-60.log
+        stimuli_class:   arousal
+        preprocessing:   PLV
+        subject_setup:   independent
+        experimental_setup: segment
+    
+04-09-2022 05:47:47|INFO|Running Split-First
+04-09-2022 05:47:47|INFO|X.shape=(1280, 2480), y.shape=(1280,), groups.shape=(1280,)
+04-09-2022 05:47:47|INFO|Is groups None: True 
+04-09-2022 05:55:24|INFO|1/10|grid.best_params_={'C': 1.0, 'gamma': 0.001, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6527777777777778, grid.best_index_=10, acc=0.4921875, time=456.6163377761841
+04-09-2022 05:55:24|INFO|Is groups None: True 
+04-09-2022 06:02:35|INFO|2/10|grid.best_params_={'C': 10000000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6675347222222222, grid.best_index_=42, acc=0.2578125, time=430.9929437637329
+04-09-2022 06:02:35|INFO|Is groups None: True 
+04-09-2022 06:09:42|INFO|3/10|grid.best_params_={'C': 100000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6918402777777778, grid.best_index_=35, acc=0.109375, time=427.5301773548126
+04-09-2022 06:09:42|INFO|Is groups None: True 
+04-09-2022 06:16:59|INFO|4/10|grid.best_params_={'C': 100000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6440972222222222, grid.best_index_=35, acc=0.2109375, time=436.9241523742676
+04-09-2022 06:16:59|INFO|Is groups None: True 
+04-09-2022 06:24:10|INFO|5/10|grid.best_params_={'C': 1000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6666666666666666, grid.best_index_=28, acc=0.328125, time=430.67221450805664
+04-09-2022 06:24:10|INFO|Is groups None: True 
+04-09-2022 06:31:25|INFO|6/10|grid.best_params_={'C': 10000000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6553819444444444, grid.best_index_=42, acc=0.3671875, time=435.1561074256897
+04-09-2022 06:31:25|INFO|Is groups None: True 
+04-09-2022 06:38:41|INFO|7/10|grid.best_params_={'C': 10000000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6458333333333334, grid.best_index_=42, acc=0.609375, time=435.44921588897705
+04-09-2022 06:38:41|INFO|Is groups None: True 
+04-09-2022 06:46:00|INFO|8/10|grid.best_params_={'C': 100000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.625, grid.best_index_=35, acc=0.4765625, time=439.1541681289673
+04-09-2022 06:46:00|INFO|Is groups None: True 
+04-09-2022 06:53:17|INFO|9/10|grid.best_params_={'C': 10000000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6579861111111112, grid.best_index_=42, acc=0.4453125, time=436.7824158668518
+04-09-2022 06:53:17|INFO|Is groups None: True 
+04-09-2022 07:00:34|INFO|10/10|grid.best_params_={'C': 100000000.0, 'gamma': 1e-09, 'kernel': 'rbf', 'max_iter': 1000}, grid.best_score_=0.6414930555555556, grid.best_index_=35, acc=0.5390625, time=437.778281211853
+04-09-2022 07:00:34|INFO|all|10-CV=0.38359|STD=0.14952|Time spend=4683.099878549576
+04-09-2022 07:00:34|INFO|final|10-CV=0.38359|STD=0.00000

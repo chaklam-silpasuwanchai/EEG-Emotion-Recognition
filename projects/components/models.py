@@ -3,8 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
-
-
 # LSTM is the only model that requires seq_len_first = True
 class LSTM(nn.Module):
     '''
