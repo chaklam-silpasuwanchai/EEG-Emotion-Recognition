@@ -4,11 +4,11 @@ for seg in 60 20
 do
     for preprocessing in "DE" "DASM" "RASM" "DCAU" "PCC_TIME" "PCC_FREQ" "PLV" "PLI"
     do
-        for sub in "dependent" "independent"
+        for sti in "arousal" "valence"
         do
-            for sti in "arousal" "valence"
+            for exp in "trial" "segment"
             do
-                for exp in "trial" "segment"
+                for sub in "dependent" "independent"
                 do
                     name="./output/"$sub-$exp-$sti-$preprocessing-$seg".log" 
                     cmd="python3 main-ml.py \

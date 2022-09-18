@@ -116,7 +116,7 @@ if __name__ == '__main__':
         X = preprocessing(data, variant=args.preprocessing)
         X = standardize(X)
         # if experimental_setup is split_first, groups will be ignored
-        cv_scores = experimental_setup(X, labels, groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
+        cv_scores = experimental_setup(X, labels.reshape(-1), groups, cv_result_prefix=f"{output_gridsearch_path}/{filename}")
 
         logging.info(f"{filename}|10-CV={format(  round(cv_scores.mean(),5), '.5f')}|STD={format(  round(cv_scores.std(),5), '.5f')}|Time spend={time() - start}")
         cv_scores_final.append(cv_scores.mean())
